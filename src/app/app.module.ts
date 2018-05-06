@@ -15,6 +15,9 @@ import { HeroesComponent } from './heroes.component';
 import { HeroDetailComponent } from './hero-detail.component';
 import { HeroSearchComponent } from './hero-search.component';
 
+import { RestItemService } from './rest-item.service';
+import { RestItemsComponent } from './rest-items.component';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -33,8 +36,12 @@ import { HeroSearchComponent } from './hero-search.component';
     HeroSearchComponent,
     HeroesComponent,
     HeroDetailComponent,
+    RestItemsComponent,
   ],
-  providers: [HeroService],
+  providers: [
+    HeroService,
+    RestItemService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
