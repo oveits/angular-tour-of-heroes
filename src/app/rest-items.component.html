@@ -1,23 +1,23 @@
 <h2>My Rest Items</h2>
 
-<ul class="heroes">
+<ul class="restItems">
   <li *ngFor="let restItem of restItems">
-    <span class="hero-element">
+    <span class="restItem-element">
       <span class="badge">{{restItem.id}}</span>
     </span>
-    <button class="delete-button" (click)="deleteHero(hero, $event)">Delete</button>
+    <button class="delete-button" (click)="deleteRestItem(restItem, $event)">Delete</button>
   </li>
 </ul>
 
 <div class="error" *ngIf="error">{{error}}</div>
 <button (click)="addRestItem()">Add New Rest Item</button>
-<div *ngIf="addingHero">
-  <my-hero-detail (close)="close($event)"></my-hero-detail>
+<div *ngIf="addingRestItem">
+  <my-rest-item-detail (close)="close($event)"></my-rest-item-detail>
 </div>
 
-<div *ngIf="selectedHero">
+<div *ngIf="selectedRestItem">
   <h2>
-    {{selectedHero.name | uppercase}} is my hero
+    {{selectedRestItem.name | uppercase}} is my restItem
   </h2>
   <button (click)="gotoDetail()">View Details</button>
 </div>
@@ -30,8 +30,8 @@
   <button (click)="showNgFor=!showNgFor">{{showNgFor ? 'Hide' : 'Show'}} ngFor Features</button>
   <table [class.hidden]="!showNgFor">
     <tbody>
-      <tr *ngFor="let hero of heroes; let ix = index; let c = count; let e = even; let o = odd; let f = first; let l = last">
-        <td>{{hero.name}}</td>
+      <tr *ngFor="let restItem of restItems; let ix = index; let c = count; let e = even; let o = odd; let f = first; let l = last">
+        <td>{{restItem.name}}</td>
         <td>{{ix}}</td>
         <td>{{c}}</td>
         <td>{{e}}</td>

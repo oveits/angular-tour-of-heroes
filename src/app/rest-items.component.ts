@@ -25,46 +25,46 @@ export class RestItemsComponent implements OnInit {
           this.restItems = restItems;
           console.log(this.restItems);
         }
-          ,
+        ,
         error => (this.error = error)
       )
   }
 
-  /*
-  addHero(): void {
-    this.addingHero = true;
-    this.selectedHero = null;
+  
+  addRestItem(): void {
+    this.addingRestItem = true;
+    this.selectedRestItem = null;
   }
 
-  close(savedHero: Hero): void {
-    this.addingHero = false;
-    if (savedHero) {
-      this.getHeroes();
+  close(savedRestItem: RestItem): void {
+    this.addingRestItem = false;
+    if (savedRestItem) {
+      this.getRestItems();
     }
   }
 
-  deleteHero(hero: Hero, event: any): void {
+  deleteRestItem(restItem: RestItem, event: any): void {
     event.stopPropagation();
-    this.heroService.delete(hero).subscribe(res => {
-      this.heroes = this.heroes.filter(h => h !== hero);
-      if (this.selectedHero === hero) {
-        this.selectedHero = null;
+    this.restItemService.delete(restItem).subscribe(res => {
+      this.restItems = this.restItems.filter(h => h !== restItem);
+      if (this.selectedRestItem === restItem) {
+        this.selectedRestItem = null;
       }
     }, error => (this.error = error));
   }
-*/
+
   ngOnInit(): void {
     this.getRestItems();
   }
 
   /*
-  onSelect(hero: Hero): void {
-    this.selectedHero = hero;
-    this.addingHero = false;
+  onSelect(restItem: RestItem): void {
+    this.selectedRestItem = restItem;
+    this.addingRestItem = false;
   }
 
   gotoDetail(): void {
-    this.router.navigate(['/detail', this.selectedHero.id]);
+    this.router.navigate(['/detail', this.selectedRestItem.id]);
   }
   */
 }

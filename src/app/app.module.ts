@@ -17,6 +17,7 @@ import { HeroSearchComponent } from './hero-search.component';
 
 import { RestItemService } from './rest-item.service';
 import { RestItemsComponent } from './rest-items.component';
+import { RestItemDetailComponent } from './rest-item-detail.component';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { RestItemsComponent } from './rest-items.component';
     HeroesComponent,
     HeroDetailComponent,
     RestItemsComponent,
+    RestItemDetailComponent,
   ],
   providers: [
     HeroService,
