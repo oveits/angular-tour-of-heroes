@@ -1,5 +1,6 @@
 export class RestItem {
     id: String;
+    name: String;
     deployments: String;
     configuredInstances: String;
     tasksStaged: String;

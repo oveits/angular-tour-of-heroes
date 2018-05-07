@@ -1,8 +1,6 @@
 <div *ngIf="restItem">
-  <h2>{{restItem.name}} details!</h2>
   <div>
-    <label>id: </label>
-    <input [(ngModel)]="restItem.id" placeholder="id" />
+    <input [(ngModel)]="restItem.name" placeholder="Service Name" (keyup.enter)="save()" />
   </div>
   <button (click)="goBack()">Back</button>
   <button (click)="save()">Save</button>

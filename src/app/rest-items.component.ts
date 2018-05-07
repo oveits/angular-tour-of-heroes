@@ -23,6 +23,10 @@ export class RestItemsComponent implements OnInit {
       .subscribe(
         restItems => {
           this.restItems = restItems;
+          for(let item of restItems){
+            // remove leading slash:
+            item.name = item.id.replace(/^\//g, '');
+          }
           console.log(this.restItems);
         }
         ,
@@ -57,7 +61,7 @@ export class RestItemsComponent implements OnInit {
     this.getRestItems();
   }
 
-  /*
+  
   onSelect(restItem: RestItem): void {
     this.selectedRestItem = restItem;
     this.addingRestItem = false;
@@ -66,5 +70,6 @@ export class RestItemsComponent implements OnInit {
   gotoDetail(): void {
     this.router.navigate(['/detail', this.selectedRestItem.id]);
   }
+  /*
   */
 }

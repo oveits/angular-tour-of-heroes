@@ -54,7 +54,7 @@ export class RestItemService {
     // Add new RestItem
     private post(restItem: RestItem) {
       var restRequest = {
-        "id": restItem.id,
+        "id": "/" + restItem.name,
         "backoffFactor": 1.15,
         "backoffSeconds": 1,
         "container": {
@@ -131,7 +131,7 @@ export class RestItemService {
     private put(restItem: RestItem) {
       const url = `${this.restItemsUrl}/${restItem.id}`;
       var restRequest = {
-        "id": restItem.id,
+        "id": "/" + restItem.name,
         "backoffFactor": 1.15,
         "backoffSeconds": 1,
         "container": {
