@@ -49,11 +49,15 @@ export class RestItemService {
   
     delete(restItem: RestItem) { 
       const url = `${this.restItemsUrl}/${restItem.id}`; 
-      return this.http.delete<RestItem>(url, this.httpOptions).pipe(catchError(this.handleError));
+      let returnValue = this.http.delete<RestItem>(url, this.httpOptions).pipe(catchError(this.handleError));
+      return returnValue;
+      // return this.http.delete<RestItem>(url, this.httpOptions).pipe(catchError(this.handleError));
     }
   
     // Add new RestItem
     private post(restItem: RestItem) {
+      var restRequest = restItem;
+      /*
       var restRequest = {
         "id": "/" + restItem.name,
         "backoffFactor": 1.15,
@@ -123,6 +127,7 @@ export class RestItemService {
         "fetch": [],
         "constraints": []
       };
+      */
       return this.http
         .post<RestItem>(this.restItemsUrl, restRequest, this.httpOptions)
         .pipe(catchError(this.handleError));
@@ -131,6 +136,8 @@ export class RestItemService {
     // Update existing RestItem
     private put(restItem: RestItem) {
       const url = `${this.restItemsUrl}/${restItem.id}`;
+      var restRequest = restItem;
+      /*
       var restRequest = {
         "id": "/" + restItem.name,
         "backoffFactor": 1.15,
@@ -200,6 +207,7 @@ export class RestItemService {
         "fetch": [],
         "constraints": []
       };
+      */
       return this.http.put<RestItem>(url, restRequest, this.httpOptions).pipe(catchError(this.handleError));
     }
 

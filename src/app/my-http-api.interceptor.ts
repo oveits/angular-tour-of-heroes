@@ -19,21 +19,33 @@ export class MyHttpApiInterceptor implements HttpInterceptor {
         request: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
+
+        // interceptor for marathon API only; i.e. NOOP for other URLs:
+        if(!request.url.match('.*marathon.*')){
+            return next.handle(request);
+        }
+
         const authToken = this.authToken; // TODO: const authToken = this.auth.getAuthorizationToken();
         const authReq = request.clone({
             headers: request.headers.set('Authorization', authToken)
-          });
+        });
 
-          request = request.clone({
+        request = request.clone({
             headers: request.headers.set('Authorization', 'token=' + authToken)
-          });
-          request = request.clone({
+        });
+        request = request.clone({
             headers: request.headers.set('Content-Type', 'application/json')
-          });
+        });
+
+        if(request.method === 'POST' || request.method === 'PUT'){
+            request = request.clone({
+                body: this.requestBodyForCreatingItem(request.body)
+            });
+        }
     
         return next.handle(request).pipe(map(event =>{
-            if (event instanceof HttpResponse) {
-                console.log("Response Interceptor");
+            if (request.method === 'GET' && event instanceof HttpResponse) {
+                console.log("Response Interceptor for GET");
                 console.log(event);
                 event = event.clone({ body: event.body['apps'].map(item => {
                     return {
@@ -46,9 +58,10 @@ export class MyHttpApiInterceptor implements HttpInterceptor {
             }        
             return event;
         }))
+
   }
 
-  createRequestBody(item){
+  requestBodyForCreatingItem(item){
       return {
         "id": "/" + item.name,
         "backoffFactor": 1.15,
