@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpInterceptor  } from '@angular/common/http';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 //import { Observable, observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { RestItem } from './rest-item';
 @Injectable()
 export class RestItemService {
     private restItemsUrl : string = "http://94.130.187.229/service/marathon/v2/apps";
-    private token : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjU4MDcxNjAsImlhdCI6MTUyNTM3NTE2MCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.ghi5W7id3MvGj92rNlP9LsZtTd91RIcZXosl_zxVvjo";
+    private token : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjYzMjE3MzQsImlhdCI6MTUyNTg4OTczNCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.AXhgW8EHiQiyPff0JWr6Urzxy6Jj9MZ8euL-P3BXmok";
     private httpOptions: {
       headers: HttpHeaders
     };
@@ -29,11 +29,12 @@ export class RestItemService {
       return this.http
         .get<RestItem[]>(this.restItemsUrl, this.httpOptions)
         .pipe(
-          map(data => data['apps']), catchError(this.handleError)
+          //map(data => data['apps']), catchError(this.handleError)
+          map(data => data), catchError(this.handleError)
         );
     }
 
-    getRestItem(id: number): Observable<RestItem> {
+    getRestItem(id: string): Observable<RestItem> {
       return this.getRestItems().pipe(
         map(restItems => restItems.find(restItem => restItem.id === id))
       );

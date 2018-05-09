@@ -23,17 +23,16 @@ export class RestItemsComponent implements OnInit {
       .subscribe(
         restItems => {
           this.restItems = restItems;
-          for(let item of restItems){
-            // remove leading slash:
-            item.name = item.id.replace(/^\//g, '');
-          }
+          // for(let item of restItems){
+          //   // remove leading slash:
+          //   item.name = item.id.replace(/^\//g, '');
+          // }
           console.log(this.restItems);
         }
         ,
         error => (this.error = error)
       )
   }
-
   
   addRestItem(): void {
     this.addingRestItem = true;

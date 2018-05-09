@@ -7,4 +7,5 @@ export class RestItem {
     tasksHealthy: String;
     tasksUnhealthy: String;
     tasksRunning: String;
+    healthyness: number;
   }
