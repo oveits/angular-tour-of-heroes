@@ -8,105 +8,115 @@ import {
 } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-//import 'rxjs/add/operator/do';
 import { map } from 'rxjs/operators';
 
-/*  noop interceptor */
-/*
-@Injectable()
-export class MyHttpApiInterceptor implements HttpInterceptor {
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    return next.handle(request);
-  }
-}
-*/
-
-/*
-@Injectable()
-export class MyHttpApiInterceptor implements HttpInterceptor {
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    return next
-        .handle(request)
-        .do((ev: HttpEvent<any>) => {
-        if (ev instanceof HttpResponse) {
-            console.log('processing response', ev);
-        }
-        });
-  }
-}
-*/
-
-/*
-problem with "do"
-export class MyHttpApiInterceptor implements HttpInterceptor {  
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {  
-  
-        console.log("Before sending data")  
-        console.log(req);  
-        return next.handle(req)  
-            //.retry(3)  
-            .do(resp => {  
-                if (resp instanceof HttpResponse) {  
-                   console.log('Response is ::');  
-                    console.log(resp.body)  
-                }  
-                return resp;  
-            }).catch(err => {  
-                console.log(err);  
-                if (err instanceof HttpResponse)  
- {  
-                    console.log(err.status);  
-                    console.log(err.body);  
-                }  
-  
-                return Observable.of(err);  
-            });  
-  
-    }  
-}  
-*/
-
-// trying with answer https://stackoverflow.com/questions/45566944/angular-4-3-httpclient-intercept-response
-// intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-//     return next.handle(req).map(event => {
-//         if (event instanceof HttpResponse && shouldBeIntercepted(event)) {
-//             event = event.clone({ body: resolveReferences(event.body) })
-//         }         
-//         return event;
-//     });
-// }
-
-// here, I had the error "ERROR in src/app/my-http-api.interceptor.ts(91,33): error TS2339: Property 'map' does not exist on type 'Observable<HttpEvent<any>>'."
-// I have resolved it with a hint found on 
 
 @Injectable()
 export class MyHttpApiInterceptor implements HttpInterceptor {
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+    private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjYzMjE3MzQsImlhdCI6MTUyNTg4OTczNCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.AXhgW8EHiQiyPff0JWr6Urzxy6Jj9MZ8euL-P3BXmok";
+
+    intercept(
+        request: HttpRequest<any>,
+        next: HttpHandler
+    ): Observable<HttpEvent<any>> {
+        const authToken = this.authToken; // TODO: const authToken = this.auth.getAuthorizationToken();
+        const authReq = request.clone({
+            headers: request.headers.set('Authorization', authToken)
+          });
+
+          request = request.clone({
+            headers: request.headers.set('Authorization', 'token=' + authToken)
+          });
+          request = request.clone({
+            headers: request.headers.set('Content-Type', 'application/json')
+          });
     
-    return next.handle(request).pipe(map(event =>{
-        if (event instanceof HttpResponse) {
-            console.log("Response");
-            console.log(event);
-            console.log(event.body);
-            event = event.clone({ body: event.body['apps'].map(item => {
-                return {
-                    name: item.id.replace(/^\//g, ''),
-                    id: item.id,
-                    instances: item.instances,
-                    healthyness: item.tasksHealthy/item.instances
-                };
-            }) });
-        }         
-        return event;
-    }))
+        return next.handle(request).pipe(map(event =>{
+            if (event instanceof HttpResponse) {
+                console.log("Response Interceptor");
+                console.log(event);
+                event = event.clone({ body: event.body['apps'].map(item => {
+                    return {
+                        name: item.id.replace(/^\//g, ''),
+                        id: item.id,
+                        instances: item.instances,
+                        healthyness: item.tasksHealthy/item.instances
+                    };
+                })});
+            }        
+            return event;
+        }))
+  }
+
+  createRequestBody(item){
+      return {
+        "id": "/" + item.name,
+        "backoffFactor": 1.15,
+        "backoffSeconds": 1,
+        "container": {
+          "portMappings": [
+            {
+              "containerPort": 80,
+              "hostPort": 0,
+              "labels": {
+              },
+              "protocol": "tcp",
+              "servicePort": 80
+            }
+          ],
+          "type": "DOCKER",
+          "volumes": [],
+          "docker": {
+            "image": "nginxdemos/hello",
+            "forcePullImage": false,
+            "privileged": false,
+            "parameters": []
+          }
+        },
+        "cpus": 0.1,
+        "disk": 0,
+        "healthChecks": [
+          {
+            "gracePeriodSeconds": 15,
+            "ignoreHttp1xx": false,
+            "intervalSeconds": 3,
+            "maxConsecutiveFailures": 2,
+            "portIndex": 0,
+            "timeoutSeconds": 2,
+            "delaySeconds": 15,
+            "protocol": "HTTP",
+            "path": "/"
+          }
+        ],
+        "instances": 1,
+        "labels": {
+          "HAPROXY_DEPLOYMENT_GROUP": "nginx-hostname",
+          "HAPROXY_0_REDIRECT_TO_HTTPS": "false",
+          "HAPROXY_GROUP": "external",
+          "HAPROXY_DEPLOYMENT_ALT_PORT": "80",
+          "HAPROXY_0_PATH": "/" + item.name,
+          "HAPROXY_0_VHOST": "195.201.17.1"
+        },
+        "maxLaunchDelaySeconds": 3600,
+        "mem": 100,
+        "gpus": 0,
+        "networks": [
+          {
+            "mode": "container/bridge"
+          }
+        ],
+        "requirePorts": false,
+        "upgradeStrategy": {
+          "maximumOverCapacity": 1,
+          "minimumHealthCapacity": 1
+        },
+        "killSelection": "YOUNGEST_FIRST",
+        "unreachableStrategy": {
+          "inactiveAfterSeconds": 0,
+          "expungeAfterSeconds": 0
+        },
+        "fetch": [],
+        "constraints": []
+      };
   }
 }

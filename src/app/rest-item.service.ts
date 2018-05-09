@@ -19,8 +19,9 @@ export class RestItemService {
       this.httpOptions = {
         //observe: 'body',
         headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'Authorization': 'token=' + this.token
+          'Content-Type':  'application/json'
+          // ,
+          // 'Authorization': 'token=' + this.token
         })
       };
     }
@@ -29,7 +30,6 @@ export class RestItemService {
       return this.http
         .get<RestItem[]>(this.restItemsUrl, this.httpOptions)
         .pipe(
-          //map(data => data['apps']), catchError(this.handleError)
           map(data => data), catchError(this.handleError)
         );
     }
