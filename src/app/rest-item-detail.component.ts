@@ -22,9 +22,12 @@ export class RestItemDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
       if (params['id'] !== undefined) {
-        const id = +params['id'];
+        const id = params['id'];
         this.navigated = true;
-        this.restItemService.getRestItem(id).subscribe(restItem => (this.restItem = restItem));
+        this.restItemService.getRestItem(id).subscribe(restItem => {
+          this.restItem = restItem;
+//          this.restItem.name = restItem.id;
+        });
       } else {
         this.navigated = false;
         this.restItem = new RestItem();

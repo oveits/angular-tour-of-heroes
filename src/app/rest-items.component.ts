@@ -68,7 +68,7 @@ export class RestItemsComponent implements OnInit {
   }
 
   gotoDetail(): void {
-    this.router.navigate(['/detail', this.selectedRestItem.id]);
+    this.router.navigate(['/services', this.selectedRestItem.id]);
   }
   /*
   */

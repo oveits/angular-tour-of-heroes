@@ -1,7 +1,9 @@
 <h2>Services</h2>
 
+<div *ngIf="null == restItems">Loading...</div>
+
 <ul class="restItems">
-  <li *ngFor="let restItem of restItems">
+  <li *ngFor="let restItem of restItems" (click)="onSelect(restItem)" [class.selected]="restItem === selectedRestItem">
     <span class="restItem-element">
       <span class="badge">{{restItem.name}}</span>
     </span>
@@ -17,7 +19,7 @@
 
 <div *ngIf="selectedRestItem">
   <h2>
-    {{selectedRestItem.name | uppercase}} is my restItem
+    {{selectedRestItem.name | uppercase}} is my Service
   </h2>
   <button (click)="gotoDetail()">View Details</button>
 </div>
