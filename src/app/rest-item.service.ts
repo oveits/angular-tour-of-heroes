@@ -1,45 +1,31 @@
+import { HttpClient, HttpErrorResponse, HttpInterceptor  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpInterceptor  } from '@angular/common/http';
 import { Observable, throwError as observableThrowError } from 'rxjs';
-//import { Observable, observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { RestItem } from './rest-item';
 
-
 @Injectable()
 export class RestItemService {
     private restItemsUrl : string = "http://94.130.187.229/service/marathon/v2/apps";
-    private token : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjYzMjE3MzQsImlhdCI6MTUyNTg4OTczNCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.AXhgW8EHiQiyPff0JWr6Urzxy6Jj9MZ8euL-P3BXmok";
-    private httpOptions: {
-      headers: HttpHeaders
-    };
 
-    constructor(private http: HttpClient) {
-      this.httpOptions = {
-        //observe: 'body',
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json'
-          // ,
-          // 'Authorization': 'token=' + this.token
-        })
-      };
-    }
+    constructor(private http: HttpClient) {}
 
+    // Read all REST Items
     getRestItems() {
       return this.http
-        .get<RestItem[]>(this.restItemsUrl, this.httpOptions)
-        .pipe(
-          map(data => data), catchError(this.handleError)
-        );
+        .get<RestItem[]>(this.restItemsUrl)
+        .pipe(map(data => data), catchError(this.handleError));
     }
 
+    // Read REST Item
     getRestItem(id: string): Observable<RestItem> {
       return this.getRestItems().pipe(
         map(restItems => restItems.find(restItem => restItem.id === id))
       );
     }
   
+    // Save REST Item, i.e. create it, if it does not exist or update it, if it exists
     save(restItem: RestItem) {
       if (restItem.id) {
         return this.put(restItem);
@@ -47,168 +33,25 @@ export class RestItemService {
       return this.post(restItem);
     }
   
+    // Delete REST Item
     delete(restItem: RestItem) { 
       const url = `${this.restItemsUrl}/${restItem.id}`; 
-      let returnValue = this.http.delete<RestItem>(url, this.httpOptions).pipe(catchError(this.handleError));
-      return returnValue;
-      // return this.http.delete<RestItem>(url, this.httpOptions).pipe(catchError(this.handleError));
+
+      return this.http.delete<RestItem>(url).pipe(catchError(this.handleError));;
     }
   
-    // Add new RestItem
+    // Add new REST Item
     private post(restItem: RestItem) {
-      var restRequest = restItem;
-      /*
-      var restRequest = {
-        "id": "/" + restItem.name,
-        "backoffFactor": 1.15,
-        "backoffSeconds": 1,
-        "container": {
-          "portMappings": [
-            {
-              "containerPort": 80,
-              "hostPort": 0,
-              "labels": {
-              },
-              "protocol": "tcp",
-              "servicePort": 80
-            }
-          ],
-          "type": "DOCKER",
-          "volumes": [],
-          "docker": {
-            "image": "nginxdemos/hello",
-            "forcePullImage": false,
-            "privileged": false,
-            "parameters": []
-          }
-        },
-        "cpus": 0.1,
-        "disk": 0,
-        "healthChecks": [
-          {
-            "gracePeriodSeconds": 15,
-            "ignoreHttp1xx": false,
-            "intervalSeconds": 3,
-            "maxConsecutiveFailures": 2,
-            "portIndex": 0,
-            "timeoutSeconds": 2,
-            "delaySeconds": 15,
-            "protocol": "HTTP",
-            "path": "/"
-          }
-        ],
-        "instances": 1,
-        "labels": {
-          "HAPROXY_DEPLOYMENT_GROUP": "nginx-hostname",
-          "HAPROXY_0_REDIRECT_TO_HTTPS": "false",
-          "HAPROXY_GROUP": "external",
-          "HAPROXY_DEPLOYMENT_ALT_PORT": "80",
-          "HAPROXY_0_PATH": restItem.id,
-          "HAPROXY_0_VHOST": "195.201.17.1"
-        },
-        "maxLaunchDelaySeconds": 3600,
-        "mem": 100,
-        "gpus": 0,
-        "networks": [
-          {
-            "mode": "container/bridge"
-          }
-        ],
-        "requirePorts": false,
-        "upgradeStrategy": {
-          "maximumOverCapacity": 1,
-          "minimumHealthCapacity": 1
-        },
-        "killSelection": "YOUNGEST_FIRST",
-        "unreachableStrategy": {
-          "inactiveAfterSeconds": 0,
-          "expungeAfterSeconds": 0
-        },
-        "fetch": [],
-        "constraints": []
-      };
-      */
       return this.http
-        .post<RestItem>(this.restItemsUrl, restRequest, this.httpOptions)
+        .post<RestItem>(this.restItemsUrl, restItem)
         .pipe(catchError(this.handleError));
     }
   
-    // Update existing RestItem
+    // Update existing REST Item
     private put(restItem: RestItem) {
       const url = `${this.restItemsUrl}/${restItem.id}`;
-      var restRequest = restItem;
-      /*
-      var restRequest = {
-        "id": "/" + restItem.name,
-        "backoffFactor": 1.15,
-        "backoffSeconds": 1,
-        "container": {
-          "portMappings": [
-            {
-              "containerPort": 80,
-              "hostPort": 0,
-              "labels": {
-              },
-              "protocol": "tcp",
-              "servicePort": 80
-            }
-          ],
-          "type": "DOCKER",
-          "volumes": [],
-          "docker": {
-            "image": "nginxdemos/hello",
-            "forcePullImage": false,
-            "privileged": false,
-            "parameters": []
-          }
-        },
-        "cpus": 0.1,
-        "disk": 0,
-        "healthChecks": [
-          {
-            "gracePeriodSeconds": 15,
-            "ignoreHttp1xx": false,
-            "intervalSeconds": 3,
-            "maxConsecutiveFailures": 2,
-            "portIndex": 0,
-            "timeoutSeconds": 2,
-            "delaySeconds": 15,
-            "protocol": "HTTP",
-            "path": "/"
-          }
-        ],
-        "instances": 1,
-        "labels": {
-          "HAPROXY_DEPLOYMENT_GROUP": "nginx-hostname",
-          "HAPROXY_0_REDIRECT_TO_HTTPS": "false",
-          "HAPROXY_GROUP": "external",
-          "HAPROXY_DEPLOYMENT_ALT_PORT": "80",
-          "HAPROXY_0_PATH": restItem.id,
-          "HAPROXY_0_VHOST": "195.201.17.1"
-        },
-        "maxLaunchDelaySeconds": 3600,
-        "mem": 100,
-        "gpus": 0,
-        "networks": [
-          {
-            "mode": "container/bridge"
-          }
-        ],
-        "requirePorts": false,
-        "upgradeStrategy": {
-          "maximumOverCapacity": 1,
-          "minimumHealthCapacity": 1
-        },
-        "killSelection": "YOUNGEST_FIRST",
-        "unreachableStrategy": {
-          "inactiveAfterSeconds": 0,
-          "expungeAfterSeconds": 0
-        },
-        "fetch": [],
-        "constraints": []
-      };
-      */
-      return this.http.put<RestItem>(url, restRequest, this.httpOptions).pipe(catchError(this.handleError));
+
+      return this.http.put<RestItem>(url, restItem).pipe(catchError(this.handleError));
     }
 
     private handleError(res: HttpErrorResponse | any) {
