@@ -1,0 +1,25 @@
+<h2>Services</h2>
+
+<div *ngIf="null == marathonApps">Loading...</div>
+
+<ul class="marathonApps">
+  <li *ngFor="let marathonApp of marathonApps" (click)="onSelect(marathonApp)" [class.selected]="marathonApp === selectedRestItem">
+    <span class="marathonApp-element">
+      <span class="badge">{{marathonApp.name}}</span>
+    </span>
+    <button class="delete-button" (click)="deleteRestItem(marathonApp, $event)">Delete</button>
+  </li>
+</ul>
+
+<div class="error" *ngIf="error">{{error}}</div>
+<button (click)="addRestItem()">Add New Service</button>
+<div *ngIf="addingRestItem">
+  <my-marathon-app-detail (close)="close($event)"></my-marathon-app-detail>
+</div>
+
+<div *ngIf="selectedRestItem">
+  <h2>
+    {{selectedRestItem.name | uppercase}} is my Service
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>

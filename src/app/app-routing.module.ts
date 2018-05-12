@@ -5,16 +5,19 @@ import { DashboardComponent } from './dashboard.component';
 import { HeroesComponent } from './heroes.component';
 import { HeroDetailComponent } from './hero-detail.component';
 
-import { RestItemsComponent } from './rest-items.component';
-import { RestItemDetailComponent } from './rest-item-detail.component';
+// import { RestItemsComponent } from './rest-items.component';
+// import { RestItemDetailComponent } from './rest-item-detail.component';
+
+import { MarathonAppsComponent } from './marathon-apps.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'detail/:id', component: HeroDetailComponent },
-  { path: 'services/:id', component: RestItemDetailComponent },
+  // { path: 'services/:id', component: RestItemDetailComponent },
   { path: 'heroes', component: HeroesComponent },
-  { path: 'services', component: RestItemsComponent }
+  { path: 'marathonapps', component: MarathonAppsComponent },
+  // { path: 'services', component: RestItemsComponent }
 ];
 
 @NgModule({

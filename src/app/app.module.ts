@@ -17,9 +17,13 @@ import { HeroesComponent } from './heroes.component';
 import { HeroDetailComponent } from './hero-detail.component';
 import { HeroSearchComponent } from './hero-search.component';
 
-import { RestItemService } from './rest-item.service';
-import { RestItemsComponent } from './rest-items.component';
-import { RestItemDetailComponent } from './rest-item-detail.component';
+// import { RestItemService } from './rest-item.service';
+// import { RestItemsComponent } from './rest-items.component';
+// import { RestItemDetailComponent } from './rest-item-detail.component';
+
+import { MarathonAppService } from './marathon-app.service';
+import { MarathonAppsComponent } from './marathon-apps.component';
+import { MarathonAppDetailComponent } from './marathon-app-detail.component';
 
 @NgModule({
   imports: [
@@ -39,12 +43,15 @@ import { RestItemDetailComponent } from './rest-item-detail.component';
     HeroSearchComponent,
     HeroesComponent,
     HeroDetailComponent,
-    RestItemsComponent,
-    RestItemDetailComponent,
+    // RestItemsComponent,
+    // RestItemDetailComponent,
+    MarathonAppsComponent,
+    MarathonAppDetailComponent,
   ],
   providers: [
     HeroService,
-    RestItemService,
+    // RestItemService,
+    MarathonAppService,
     { provide: HTTP_INTERCEPTORS, useClass: MyHttpApiInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

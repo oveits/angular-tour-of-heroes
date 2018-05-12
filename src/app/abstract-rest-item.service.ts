@@ -1,15 +1,19 @@
 import { HttpClient, HttpErrorResponse, HttpInterceptor  } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { RestItem } from './rest-item';
 
 @Injectable()
-export abstract class RestItemService<T> {
+export abstract class AbstractRestItemService<T> implements OnInit {
     private url : string;
 
-    constructor(private http: HttpClient) {}
+    constructor(public http: HttpClient) {}
+
+    ngOnInit(){
+      console.log("AbstractRestItemService ngOninit called");
+    }
 
     setUrl(url: string){
       this.url = url;
@@ -18,16 +22,16 @@ export abstract class RestItemService<T> {
     // Read all REST Items
     getRestItems() {
       return this.http  
-        .get<T[]>(this.url)
+        .get<RestItem[]>(this.url)
         .pipe(map(data => data), catchError(this.handleError));
     }
 
     // Read REST Item
-    // getRestItem(id: string): Observable<RestItem> {
-    //   return this.getRestItems().pipe(
-    //     map(restItems => restItems.find(restItem => restItem.id === id))
-    //   );
-    // }
+    getRestItem(id: string): Observable<RestItem> {
+      return this.getRestItems().pipe(
+        map(restItems => restItems.find(restItem => restItem.id === id))
+      );
+    }
   
     // Save REST Item, i.e. create it, if it does not exist or update it, if it exists
     save(restItem: RestItem) {
