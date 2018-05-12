@@ -16,11 +16,11 @@ export class MarathonAppService extends AbstractRestItemService<MarathonApp> imp
     //   console.log("MarathonAppService constructor called")
     // }
 
-    private myUrl = 'http://94.130.187.229/service/marathon/v2/apps';
+    private url = 'http://94.130.187.229/service/marathon/v2/apps';
 
     constructor(http: HttpClient){
       super(http);
-      this.setUrl(this.myUrl);
+      this.setUrl(this.url);
     }
 
 

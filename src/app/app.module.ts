@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; 
-import { MyHttpApiInterceptor } from './my-http-api.interceptor';
+import { MarathonAppInterceptor } from './marathon-app.interceptor';
 
 
 import { HttpClientInMemoryWebApiModule, InMemoryDbService } from 'angular-in-memory-web-api';
@@ -52,7 +52,7 @@ import { MarathonAppDetailComponent } from './marathon-app-detail.component';
     HeroService,
     // RestItemService,
     MarathonAppService,
-    { provide: HTTP_INTERCEPTORS, useClass: MyHttpApiInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: MarathonAppInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
