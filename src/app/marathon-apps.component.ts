@@ -21,7 +21,7 @@ export class MarathonAppsComponent implements OnInit {
 
   getMarathonApps(): void {
     this.marathonAppService
-      .getMarathonApps()
+      .getAll()
       .subscribe(
         marathonApps => {
           this.marathonApps = marathonApps as MarathonApp[];

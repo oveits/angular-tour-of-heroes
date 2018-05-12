@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { RestItem } from './rest-item';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
 
@@ -10,7 +9,7 @@ import { MarathonAppService } from './marathon-app.service';
   styleUrls: ['./marathon-app-detail.component.css']
 })
 export class MarathonAppDetailComponent implements OnInit {
-  @Input() marathonApp: RestItem;
+  @Input() marathonApp: MarathonApp;
   @Output() close = new EventEmitter();
   error: any;
   navigated = false; // true if navigated here
@@ -21,19 +20,19 @@ export class MarathonAppDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-/*     this.route.params.forEach((params: Params) => {
+    this.route.params.forEach((params: Params) => {
       if (params['id'] !== undefined) {
         const id = params['id'];
         this.navigated = true;
-        this.marathonAppService.getRestItem(id).subscribe(restItem => {
-          this.marathonApp = restItem;
+        this.marathonAppService.get(id).subscribe(restItem => {
+          this.marathonApp = this.marathonApp;
 //          this.marathonApp.name = marathonApp.id;
         });
       } else {
         this.navigated = false;
         this.marathonApp = new MarathonApp();
       }
-    }); */
+    });
   }
 
   save(): void {
@@ -43,7 +42,7 @@ export class MarathonAppDetailComponent implements OnInit {
     }, error => (this.error = error)); // TODO: Display error message
   }
 
-  goBack(savedMarathonApp: RestItem = null): void {
+  goBack(savedMarathonApp: MarathonApp = null): void {
     this.close.emit(savedMarathonApp);
     if (this.navigated) {
       window.history.back();

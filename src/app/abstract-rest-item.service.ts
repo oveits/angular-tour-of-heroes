@@ -9,8 +9,9 @@ import { RestItem } from './rest-item';
 export abstract class AbstractRestItemService<T> implements OnInit {
     private abstractUrl : string;
 
-    constructor(public http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
+    // seems to be ignored on abstract services:
     ngOnInit(){
       console.log("AbstractRestItemService ngOninit called");
     }
@@ -20,15 +21,15 @@ export abstract class AbstractRestItemService<T> implements OnInit {
     }
 
     // Read all REST Items
-    getRestItems() {
+    getAll() {
       return this.http  
         .get<RestItem[]>(this.abstractUrl)
         .pipe(map(data => data), catchError(this.handleError));
     }
 
     // Read REST Item
-    getRestItem(id: string): Observable<RestItem> {
-      return this.getRestItems().pipe(
+    get(id: string): Observable<RestItem> {
+      return this.getAll().pipe(
         map(restItems => restItems.find(restItem => restItem.id === id))
       );
     }
@@ -49,20 +50,20 @@ export abstract class AbstractRestItemService<T> implements OnInit {
     }
   
     // Add new REST Item
-    private post(restItem: RestItem) {
+    protected post(restItem: RestItem) {
       return this.http
         .post<RestItem>(this.abstractUrl, restItem)
         .pipe(catchError(this.handleError));
     }
   
     // Update existing REST Item
-    private put(restItem: RestItem) {
+    protected put(restItem: RestItem) {
       const abstractUrl = `${this.abstractUrl}/${restItem.id}`;
 
       return this.http.put<RestItem>(abstractUrl, restItem).pipe(catchError(this.handleError));
     }
 
-    private handleError(res: HttpErrorResponse | any) {
+    protected handleError(res: HttpErrorResponse | any) {
       console.error(res.error || res.body.error);
       return observableThrowError(res.error || 'Server error');
     }
