@@ -7,7 +7,8 @@ import { RestItem } from './rest-item';
 
 @Injectable()
 export abstract class AbstractRestItemService<T> implements OnInit {
-    private abstractUrl : string;
+    //private url : string;
+    protected url : string;
 
     constructor(private http: HttpClient) {}
 
@@ -16,14 +17,14 @@ export abstract class AbstractRestItemService<T> implements OnInit {
       console.log("AbstractRestItemService ngOninit called");
     }
 
-    setUrl(abstractUrl: string){
-      this.abstractUrl = abstractUrl;
+    setUrl(url: string){
+      this.url = url;
     }
 
     // Read all REST Items
     getAll() {
       return this.http  
-        .get<RestItem[]>(this.abstractUrl)
+        .get<RestItem[]>(this.url)
         .pipe(map(data => data), catchError(this.handleError));
     }
 
@@ -44,23 +45,23 @@ export abstract class AbstractRestItemService<T> implements OnInit {
   
     // Delete REST Item
     delete(restItem: RestItem) { 
-      const abstractUrl = `${this.abstractUrl}/${restItem.id}`; 
+      const url = `${this.url}/${restItem.id}`; 
 
-      return this.http.delete<RestItem>(abstractUrl).pipe(catchError(this.handleError));;
+      return this.http.delete<RestItem>(url).pipe(catchError(this.handleError));;
     }
   
     // Add new REST Item
     protected post(restItem: RestItem) {
       return this.http
-        .post<RestItem>(this.abstractUrl, restItem)
+        .post<RestItem>(this.url, restItem)
         .pipe(catchError(this.handleError));
     }
   
     // Update existing REST Item
     protected put(restItem: RestItem) {
-      const abstractUrl = `${this.abstractUrl}/${restItem.id}`;
+      const url = `${this.url}/${restItem.id}`;
 
-      return this.http.put<RestItem>(abstractUrl, restItem).pipe(catchError(this.handleError));
+      return this.http.put<RestItem>(url, restItem).pipe(catchError(this.handleError));
     }
 
     protected handleError(res: HttpErrorResponse | any) {

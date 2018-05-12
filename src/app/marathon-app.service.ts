@@ -9,17 +9,18 @@ import { AbstractRestItemService } from './abstract-rest-item.service';
 @Injectable()
 export class MarathonAppService extends AbstractRestItemService<MarathonApp> implements OnInit {
 
-    private url = 'http://94.130.187.229/service/marathon/v2/apps';
+    protected url = 'http://94.130.187.229/service/marathon/v2/apps';
 
     constructor(http: HttpClient){
       super(http);
       console.log("MarathonAppService ngOninit called");
-      this.setUrl(this.url);
+      // this.setUrl(this.url);
     }
 
     // seems to be ignored:
     ngOnInit(){
-      super.setUrl(this.url);
+      console.log("OnInit called on MarathonAppService");
+      // super.setUrl(this.url);
     }
 
     // works also without explicit definition here:
