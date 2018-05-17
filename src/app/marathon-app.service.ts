@@ -27,11 +27,6 @@ export class MarathonAppService extends AbstractRestItemService<MarathonApp> imp
     setUrl(url: string){
       super.setUrl(this.url);
     }
-      
-    // needed for renaming getRestItems -> getMarathonApps
-    getAllHttpResponse() {
-      return super.getAllHttpResponse() as Observable<HttpResponse<MarathonApp[]>>;
-    }
 
     // needed for renaming getRestItems -> getMarathonApps
     getAll() {

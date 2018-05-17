@@ -20,19 +20,11 @@ export abstract class AbstractRestItemService<T> implements OnInit {
     setUrl(url: string){
       this.url = url;
     }
-
-    // Read all REST Items with fill HTTP
-    getAllHttpResponse() {
-      return this.http  
-        .get<RestItem[]>(this.url, {observe: 'response'})
-        .pipe(map(data => { console.log(data); return data;}), catchError(this.handleError));
-    }
     
     // Read all REST Items
     getAll() {
       return this.http  
-        //.get<RestItem[]>(this.url, {observe: 'response'})
-        .get<RestItem[]>(this.url)
+        .get<RestItem[]>(this.url) // if you need to receive the full HTTP, then add second parameter {observe: 'response'} here
         .pipe(map(data => data), catchError(this.handleError));
     }
 
