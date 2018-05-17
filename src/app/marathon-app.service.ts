@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpInterceptor  } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpInterceptor, HttpResponse  } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -28,6 +28,11 @@ export class MarathonAppService extends AbstractRestItemService<MarathonApp> imp
       super.setUrl(this.url);
     }
       
+    // needed for renaming getRestItems -> getMarathonApps
+    getAllHttpResponse() {
+      return super.getAllHttpResponse() as Observable<HttpResponse<MarathonApp[]>>;
+    }
+
     // needed for renaming getRestItems -> getMarathonApps
     getAll() {
       return super.getAll() as Observable<MarathonApp[]>;

@@ -8,12 +8,12 @@ import {
 } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 
 @Injectable()
 export class MarathonAppInterceptor implements HttpInterceptor {
-    private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjYzMjE3MzQsImlhdCI6MTUyNTg4OTczNCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.AXhgW8EHiQiyPff0JWr6Urzxy6Jj9MZ8euL-P3BXmok";
+    private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjY5MTk2OTcsImlhdCI6MTUyNjQ4NzY5NywiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.Q4C4pNg2mb7bV3JJUJ78dgXpL6UbIktrI3akq0KE9-8";
     private urlPattern = '.*marathon.*'
     // TODO: url is now defined in './marathon-app.service.ts' while the authToken is defined here
     //       Please Improve the configuration handling! 
@@ -51,19 +51,20 @@ export class MarathonAppInterceptor implements HttpInterceptor {
                 body: this.requestBodyForCreatingItem(request.body)
             });
         }
-    
+
         return next.handle(request).pipe(map(event =>{
-            if (request.method === 'GET' && event instanceof HttpResponse) {
-                console.log("Response Interceptor for GET");
-                console.log(event);
-                event = event.clone({ body: event.body['apps'].map(item => {
-                    return {
-                        name: item.id.replace(/^\//g, ''),
-                        id: item.id,
-                        instances: item.instances,
-                        healthyness: item.tasksHealthy/item.instances
-                    };
-                })});
+          console.log("event");
+          console.log(event);
+          if (request.method === 'GET' && event instanceof HttpResponse) {
+              console.log("Called Response Interceptor for GET");
+              event = event.clone({ body: event.body['apps'].map(item => {
+                  return {
+                      name: item.id.replace(/^\//g, ''),
+                      id: item.id,
+                      instances: item.instances,
+                      healthyness: item.tasksHealthy/item.instances
+                  };
+              })});
             }        
             return event;
         }))

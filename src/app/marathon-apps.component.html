@@ -11,7 +11,7 @@
   </li>
 </ul>
 
-<div class="error" *ngIf="error">{{error}}</div>
+<div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
 <button (click)="addMarathonApp()">Add New Service</button>
 <div *ngIf="addingMarathonApp">

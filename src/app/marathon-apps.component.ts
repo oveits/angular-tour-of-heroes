@@ -21,14 +21,20 @@ export class MarathonAppsComponent implements OnInit {
 
   getMarathonApps(): void {
     this.marathonAppService
+      //.getAllHttpResponse()
       .getAll()
       .subscribe(
+        // httpResponse => {
         marathonApps => {
+          //this.marathonApps = httpResponse.body as MarathonApp[];
           this.marathonApps = marathonApps as MarathonApp[];
           console.log(this.marathonApps);
         }
         ,
-        error => (this.error = error)
+        error => {
+          console.log(error);
+          this.error = error;
+        }
       )
   }
   

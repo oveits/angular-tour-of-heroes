@@ -21,9 +21,17 @@ export abstract class AbstractRestItemService<T> implements OnInit {
       this.url = url;
     }
 
+    // Read all REST Items with fill HTTP
+    getAllHttpResponse() {
+      return this.http  
+        .get<RestItem[]>(this.url, {observe: 'response'})
+        .pipe(map(data => { console.log(data); return data;}), catchError(this.handleError));
+    }
+    
     // Read all REST Items
     getAll() {
       return this.http  
+        //.get<RestItem[]>(this.url, {observe: 'response'})
         .get<RestItem[]>(this.url)
         .pipe(map(data => data), catchError(this.handleError));
     }
@@ -65,7 +73,11 @@ export abstract class AbstractRestItemService<T> implements OnInit {
     }
 
     protected handleError(res: HttpErrorResponse | any) {
-      console.error(res.error || res.body.error);
-      return observableThrowError(res.error || 'Server error');
+      let errorMessage : String = "";
+      if("" + res.error === '[object ProgressEvent]') { //typeof(res.error) === ProgressEvent) {
+        errorMessage = '(CORS Problem?)';
+      } 
+      console.error(res.status + ' ' + res.statusText + ' ' + res.error || res.body.error);
+      return observableThrowError(res.status + ' ' + res.statusText + ' ' + errorMessage || 'Server error');
     }
 }   
