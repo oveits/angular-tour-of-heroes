@@ -24,9 +24,8 @@ export class MarathonAppDetailComponent implements OnInit {
       if (params['id'] !== undefined) {
         const id = params['id'];
         this.navigated = true;
-        this.marathonAppService.get(id).subscribe(restItem => {
-          this.marathonApp = this.marathonApp;
-//          this.marathonApp.name = marathonApp.id;
+        this.marathonAppService.get(id).subscribe(marathonApp => {
+          this.marathonApp = marathonApp;
         });
       } else {
         this.navigated = false;
