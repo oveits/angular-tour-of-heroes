@@ -68,7 +68,9 @@ export abstract class AbstractRestItemService<T> implements OnInit {
       let errorMessage : String = "";
       if("" + res.error === '[object ProgressEvent]') { //typeof(res.error) === ProgressEvent) {
         errorMessage = '(CORS Problem?)';
-      } 
+      } else {
+        errorMessage = res.error.message;
+      }
       console.error(res.status + ' ' + res.statusText + ' ' + res.error || res.body.error);
       return observableThrowError(res.status + ' ' + res.statusText + ' ' + errorMessage || 'Server error');
     }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
+import { FormsModule }   from '@angular/forms';
 
 @Component({
   selector: 'my-marathon-app-detail',
@@ -39,7 +40,14 @@ export class MarathonAppDetailComponent implements OnInit {
     this.marathonAppService.save(this.marathonApp).subscribe(marathonApp => {
       this.marathonApp = marathonApp; // saved marathonApp, w/ id if new
       this.goBack(marathonApp);
-    }, error => (this.error = error)); // TODO: Display error message
+    }, error => {
+      this.error = error;
+    }); // TODO: Display error message
+  }
+
+
+  evaluate(input): void {
+      this.marathonApp = input; // saved marathonApp, w/ id if new
   }
 
   goBack(savedMarathonApp: MarathonApp = null): void {
