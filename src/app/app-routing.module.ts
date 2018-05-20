@@ -9,6 +9,7 @@ import { HeroDetailComponent } from './hero-detail.component';
 // import { RestItemDetailComponent } from './rest-item-detail.component';
 
 import { MarathonAppsComponent } from './marathon-apps.component';
+import { MarathonAppDetailComponent } from './marathon-app-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -17,6 +18,7 @@ const routes: Routes = [
   // { path: 'services/:id', component: RestItemDetailComponent },
   { path: 'heroes', component: HeroesComponent },
   { path: 'marathonapps', component: MarathonAppsComponent },
+  { path: 'marathonapps/:id', component: MarathonAppDetailComponent },
   // { path: 'services', component: RestItemsComponent }
 ];
 

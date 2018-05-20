@@ -15,7 +15,7 @@ export class MarathonAppsComponent implements OnInit {
   addingMarathonApp = false;
   error: any;
   showNgFor = false;
-  exposedUrl: String = '/containerservices';
+  exposedUrl: String = '/marathonapps';
 
   constructor(private router: Router, private marathonAppService: MarathonAppService) {}
 
