@@ -11,7 +11,6 @@ import { FormsModule }   from '@angular/forms';
 })
 export class MarathonAppDetailComponent implements OnInit {
   @Input() marathonApp: MarathonApp;
-  @Input() addingMarathonApp;
   @Output() close = new EventEmitter();
   error: any;
   navigated = false; // true if navigated here

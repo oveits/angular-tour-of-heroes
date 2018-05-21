@@ -1,22 +1,11 @@
 <div *ngIf="marathonApp">
 
-  <!-- <span *ngIf="addingMarathonApp === truthy"> -->
-  <!-- <span *ngIf="addingMarathonApp"> -->
   <input id="name" name="name" class="form-control" autofocus
     required minlength="4" appForbiddenName="undefined"
     [(ngModel)]="marathonApp.name" #name="ngModel" 
     placeholder="New Service" 
     pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
     <button *ngIf="name && !name.errors" (click)="save()">Save</button> <span class="error" *ngIf="error" [innerHTML]="error">{{error}}</span>
- 
-  <!-- </span> -->
-    <!-- </span> -->
-    <!-- addingMarathonApp= {{addingMarathonApp}} 
-    marathonApp.name={{marathonApp.name}} -->
-  <!-- <span *ngIf="addingMarathonApp">
-    <div id="name2" name="name2">{{marathonApp.name}}</div>
-  </span> -->
-
 
   <div>
     <div *ngIf="name.invalid && (name.dirty || name.touched)"
