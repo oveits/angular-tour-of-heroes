@@ -1,32 +1,21 @@
 <div *ngIf="marathonApp">
 
-  <input id="name" name="name" class="form-control"
-    required minlength="4" appForbiddenName="undefined"
-    [(ngModel)]="marathonApp.name" #name="ngModel" 
-    placeholder="New Service" 
-    pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
-    <button *ngIf="name && !name.errors" (click)="save()">Save</button> <span class="error" *ngIf="error" [innerHTML]="error">{{error}}</span>
+  <h1>Service: {{marathonApp.name}}</h1>
 
-
-  <div>
-    <div *ngIf="name.invalid && (name.dirty || name.touched)"
-        class="alert alert-danger">
-
-      <div *ngIf="name.errors.required">
-        Service Name is required.
-      </div>
-      <div *ngIf="name.errors.minlength">
-        Service Name must be at least 4 characters long.
-      </div>
-      <div *ngIf="name.errors.forbiddenName">
-        Service Name cannot be 'undefined'.
-      </div>
-      <div *ngIf="name.errors.pattern">
-        Service Name must start with a lowercase letter [a-z] and can consist of lowercase letters and numbers
-      </div>
-
-    </div>
-  </div>
+  <table style="width:100%">
+    <tr>
+      <th>Key</th><th>Value</th>
+    </tr>
+    <tr>
+      <td>ID</td><td>{{marathonApp.id}}</td>
+    </tr>
+    <tr>
+      <td>Instances</td><td>{{marathonApp.instances}}</td>
+    </tr>
+    <tr>
+      <td>Health</td><td>{{marathonApp.healthyness*100}}%</td>
+    </tr>
+  </table>
 
   <button (click)="goBack()">Back</button>
   

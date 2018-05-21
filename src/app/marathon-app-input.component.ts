@@ -5,11 +5,11 @@ import { MarathonAppService } from './marathon-app.service';
 import { FormsModule }   from '@angular/forms';
 
 @Component({
-  selector: 'my-marathon-app-detail',
-  templateUrl: './marathon-app-detail.component.html',
-  styleUrls: ['./marathon-app-detail.component.css']
+  selector: 'my-marathon-app-input',
+  templateUrl: './marathon-app-input.component.html',
+  styleUrls: ['./marathon-app-input.component.css']
 })
-export class MarathonAppDetailComponent implements OnInit {
+export class MarathonAppInputComponent implements OnInit {
   @Input() marathonApp: MarathonApp;
   @Input() addingMarathonApp;
   @Output() close = new EventEmitter();

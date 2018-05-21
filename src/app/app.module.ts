@@ -24,6 +24,7 @@ import { HeroSearchComponent } from './hero-search.component';
 import { MarathonAppService } from './marathon-app.service';
 import { MarathonAppsComponent } from './marathon-apps.component';
 import { MarathonAppDetailComponent } from './marathon-app-detail.component';
+import { MarathonAppInputComponent } from './marathon-app-input.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { MarathonAppDetailComponent } from './marathon-app-detail.component';
     // RestItemDetailComponent,
     MarathonAppsComponent,
     MarathonAppDetailComponent,
+    MarathonAppInputComponent,
   ],
   providers: [
     HeroService,
