@@ -1,14 +1,37 @@
 <div *ngIf="marathonApp">
 
-  <input id="name" name="name" class="form-control" autofocus
+  <input id="project" name="project" class="form-control" autofocus
+    required minlength="4" appForbiddenName="undefined"
+    [(ngModel)]="marathonApp.project" #project="ngModel" 
+    placeholder="Project" 
+    pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
+
+  <input id="name" name="name" class="form-control"
     required minlength="4" appForbiddenName="undefined"
     [(ngModel)]="marathonApp.name" #name="ngModel" 
     placeholder="New Service" 
-    pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
-    <button *ngIf="name && !name.errors" (click)="save()">Save</button> <span class="error" *ngIf="error" [innerHTML]="error">{{error}}</span>
+    pattern="[a-z][a-z0-9]+" />
+    <!-- (keyup.enter)="save()" removed, since it would allow to save marathonApps that are invalid -->
+    
+  <button *ngIf="name && !name.invalid && project && !project.invalid" (click)="save()">Save</button> 
+    
+  <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
   <div>
-    <div *ngIf="name.invalid && (name.dirty || name.touched)"
+    <div *ngIf="project && project.invalid && (project.dirty || project.touched)"
+      class="alert alert-danger">
+      <div *ngIf="project.errors.pattern">
+        Project Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
+      </div>
+      <div *ngIf="name.errors.required">
+        Project Name is required.
+      </div>
+      <div *ngIf="name.errors.minlength">
+        Project Name must be at least 4 characters long.
+      </div>
+    </div>
+
+    <div *ngIf="name && name.invalid && (name.dirty || name.touched)"
         class="alert alert-danger">
 
       <div *ngIf="name.errors.required">
@@ -21,7 +44,7 @@
         Service Name cannot be 'undefined'.
       </div>
       <div *ngIf="name.errors.pattern">
-        Service Name must start with a lowercase letter [a-z] and can consist of lowercase letters and numbers
+        Service Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
       </div>
 
     </div>

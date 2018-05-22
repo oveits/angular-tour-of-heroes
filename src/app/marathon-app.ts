@@ -3,6 +3,7 @@ import { RestItem } from './rest-item';
 export class MarathonApp extends RestItem {
     id: String;
     name: String;
+    project: String;
     instances: Number;
     healthyness: number;
 
