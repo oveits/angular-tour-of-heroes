@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
 import { RestItem } from './rest-item';
@@ -16,15 +17,22 @@ export class MarathonAppsComponent implements OnInit {
   error: any;
   showNgFor = false;
   exposedUrl: String = '/marathonapps';
+  project: String = null;
 
-  constructor(private router: Router, private marathonAppService: MarathonAppService) {}
+  constructor(private router: Router, 
+    private marathonAppService: MarathonAppService,
+    private route: ActivatedRoute) {}
 
-  getMarathonApps(): void {
+  getMarathonApps(myProject: String = null): void {
     this.marathonAppService
       .getAll()
       .subscribe(
         marathonApps => {
           this.marathonApps = marathonApps as MarathonApp[];
+          if(myProject) {
+            this.project = myProject;
+            this.marathonApps = this.marathonApps.filter(app => app.project === myProject)
+          }
           console.log(this.marathonApps);
         }
         ,
@@ -60,7 +68,15 @@ export class MarathonAppsComponent implements OnInit {
   ngOnInit(): void {
     // not needed, sind the Url is set in the Service, and is not part of the MarathonApp class:
     //this.marathonAppService.setUrl((new MarathonApp).url);
-    this.getMarathonApps();
+    this.route.params.forEach((params: Params) => {
+      if (params['project'] !== undefined) {
+        this.project = params['project'];
+        this.getMarathonApps(this.project);
+      } else {
+        this.getMarathonApps();
+      }
+    });
+    
   }
   
   onSelect(marathonApp: MarathonApp): void {

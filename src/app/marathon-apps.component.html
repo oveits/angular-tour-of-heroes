@@ -1,11 +1,11 @@
-<h2>Services</h2>
+<h2>Services<span *ngIf="project"> of {{project}}</span></h2>
 
 <div *ngIf="null == marathonApps">Loading...</div>
 
 <ul class="marathonApps">
   <li *ngFor="let marathonApp of marathonApps" (click)="onSelect(marathonApp)" [class.selected]="marathonApp === selectedMarathonApp">
     <span class="marathonApp-element">
-      <span class="badge">{{marathonApp.project}}: {{marathonApp.name}}</span>
+      <span class="badge"><span *ngIf="project !== marathonApp.project">{{marathonApp.project}}: </span>{{marathonApp.name}}</span>
     </span>
     <button class="delete-button" (click)="deleteMarathonApp(marathonApp, $event)">Delete</button>
   </li>
