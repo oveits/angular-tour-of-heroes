@@ -58,12 +58,18 @@ export class MarathonAppInterceptor implements HttpInterceptor {
           if (request.method === 'GET' && event instanceof HttpResponse) {
               console.log("Called Response Interceptor for GET");
               event = event.clone({ body: event.body['apps'].map(item => {
-                  return {
-                      name: item.id.replace(/^\//g, ''),
-                      id: item.id,
-                      instances: item.instances,
-                      healthyness: item.tasksHealthy/item.instances
-                  };
+                var idArray = item.id.split("/");
+                idArray.shift(); // remove leading empty element created because id starts with "/"
+                var name = idArray.pop();
+                var project = idArray.join("/");
+
+                return {
+                  project: project,
+                  name: name,
+                  id: item.id,
+                  instances: item.instances,
+                  healthyness: item.tasksHealthy/item.instances
+                };
               })});
             }        
             return event;
@@ -72,6 +78,7 @@ export class MarathonAppInterceptor implements HttpInterceptor {
   }
 
   requestBodyForCreatingItem(item){
+    // var id = item.id;
     var id = null;
     if (item.project) {
       id = "/" + item.project + "/" + item.name;

@@ -5,7 +5,7 @@
 <ul class="marathonApps">
   <li *ngFor="let marathonApp of marathonApps" (click)="onSelect(marathonApp)" [class.selected]="marathonApp === selectedMarathonApp">
     <span class="marathonApp-element">
-      <span class="badge">{{marathonApp.name}}</span>
+      <span class="badge">{{marathonApp.project}}: {{marathonApp.name}}</span>
     </span>
     <button class="delete-button" (click)="deleteMarathonApp(marathonApp, $event)">Delete</button>
   </li>
