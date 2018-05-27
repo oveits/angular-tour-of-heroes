@@ -1,10 +1,29 @@
 <div *ngIf="marathonApp">
 
-  <input id="project" name="project" class="form-control" autofocus
+
+  <div *ngIf="!project">
+    <!-- projectName = {{projectName}}
+    project = {{project}}
+    marathonApp.project = {{marathonApp.project}} -->
+  <input id="projectName" name="projectName" class="form-control" autofocus
     required minlength="4" appForbiddenName="undefined"
-    [(ngModel)]="marathonApp.project" #project="ngModel" 
-    placeholder="Project" 
+    [(ngModel)]="marathonApp.project" #projectName="ngModel" 
+    placeholder="Project"  
     pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
+
+    <div *ngIf="projectName && projectName.invalid && (projectName.dirty || projectName.touched)"
+      class="alert alert-danger">
+      <div *ngIf="projectName.errors.pattern">
+        Project Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
+      </div>
+      <div *ngIf="name.errors.required">
+        Project Name is required.
+      </div>
+      <div *ngIf="name.errors.minlength">
+        Project Name must be at least 4 characters long.
+      </div>
+    </div>
+  </div>
 
   <input id="name" name="name" class="form-control"
     required minlength="4" appForbiddenName="undefined"
@@ -13,14 +32,14 @@
     pattern="[a-z][a-z0-9]+" />
     <!-- (keyup.enter)="save()" removed, since it would allow to save marathonApps that are invalid -->
     
-  <button *ngIf="name && !name.invalid && project && !project.invalid" (click)="save()">Save</button> 
+  <button *ngIf="name && !name.invalid && !projectName || ( projectName && !projectName.invalid )" (click)="save()">Save</button> 
     
   <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
   <div>
-    <div *ngIf="project && project.invalid && (project.dirty || project.touched)"
+    <div *ngIf="projectName && projectName.invalid && (projectName.dirty || projectName.touched)"
       class="alert alert-danger">
-      <div *ngIf="project.errors.pattern">
+      <div *ngIf="projectName.errors.pattern">
         Project Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
       </div>
       <div *ngIf="name.errors.required">

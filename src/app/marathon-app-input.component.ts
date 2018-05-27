@@ -10,8 +10,8 @@ import { FormsModule }   from '@angular/forms';
   styleUrls: ['./marathon-app-input.component.css']
 })
 export class MarathonAppInputComponent implements OnInit {
+  @Input() project: String;
   @Input() marathonApp: MarathonApp;
-  @Input() addingMarathonApp;
   @Output() close = new EventEmitter();
   error: any;
   navigated = false; // true if navigated here
@@ -32,6 +32,10 @@ export class MarathonAppInputComponent implements OnInit {
       } else {
         this.navigated = false;
         this.marathonApp = new MarathonApp();
+      }
+      if (params['project'] !== undefined) {
+        this.project = params['project'];
+        this.marathonApp.project = this.project;
       }
     });
   }

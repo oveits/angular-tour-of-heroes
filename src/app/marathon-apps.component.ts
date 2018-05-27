@@ -51,7 +51,7 @@ export class MarathonAppsComponent implements OnInit {
   close(savedMarathonApp: MarathonApp): void {
     this.addingMarathonApp = false;
     if (savedMarathonApp) {
-      this.getMarathonApps();
+      this.getMarathonApps(this.project);
     }
   }
 
