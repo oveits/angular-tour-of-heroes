@@ -2,7 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; 
+import { MarathonInterceptor } from './marathon.interceptor';
 import { MarathonAppInterceptor } from './marathon-app.interceptor';
+import { ProjectInterceptor } from './project.interceptor';
 
 
 import { HttpClientInMemoryWebApiModule, InMemoryDbService } from 'angular-in-memory-web-api';
@@ -25,6 +27,11 @@ import { MarathonAppService } from './marathon-app.service';
 import { MarathonAppsComponent } from './marathon-apps.component';
 import { MarathonAppDetailComponent } from './marathon-app-detail.component';
 import { MarathonAppInputComponent } from './marathon-app-input.component';
+
+import { ProjectService } from './project.service';
+import { ProjectsComponent } from './projects.component';
+import { ProjectDetailComponent } from './project-detail.component';
+import { ProjectInputComponent } from './project-input.component';
 
 @NgModule({
   imports: [
@@ -49,12 +56,18 @@ import { MarathonAppInputComponent } from './marathon-app-input.component';
     MarathonAppsComponent,
     MarathonAppDetailComponent,
     MarathonAppInputComponent,
+    ProjectsComponent,
+    ProjectDetailComponent,
+    ProjectInputComponent,
   ],
   providers: [
     HeroService,
     // RestItemService,
     MarathonAppService,
-    { provide: HTTP_INTERCEPTORS, useClass: MarathonAppInterceptor, multi: true }
+    ProjectService,
+    { provide: HTTP_INTERCEPTORS, useClass: MarathonInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: MarathonAppInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ProjectInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

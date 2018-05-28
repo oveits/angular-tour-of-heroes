@@ -12,6 +12,10 @@ import { MarathonAppsComponent } from './marathon-apps.component';
 import { MarathonAppDetailComponent } from './marathon-app-detail.component';
 import { MarathonAppInputComponent } from './marathon-app-input.component';
 
+import { ProjectsComponent } from './projects.component';
+import { ProjectDetailComponent } from './project-detail.component';
+import { ProjectInputComponent } from './project-input.component';
+
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
@@ -22,6 +26,8 @@ const routes: Routes = [
   { path: 'marathonapps/:id', component: MarathonAppDetailComponent },
   { path: 'marathonappsinput', component: MarathonAppInputComponent },
   { path: 'projects/:project/marathonapps', component: MarathonAppsComponent },
+  { path: 'projects', component: ProjectsComponent },
+  { path: 'projects/:id', component: ProjectDetailComponent },
   // { path: 'services', component: RestItemsComponent }
 ];
 
