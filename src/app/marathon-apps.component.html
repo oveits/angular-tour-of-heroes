@@ -5,9 +5,10 @@
 <ul class="marathonApps">
   <li *ngFor="let marathonApp of marathonApps" (click)="onSelect(marathonApp)" [class.selected]="marathonApp === selectedMarathonApp">
     <span class="marathonApp-element">
-      <span class="badge"><span *ngIf="project !== marathonApp.project">{{marathonApp.project}}: </span>{{marathonApp.name}}</span>
+      <span class="badge">{{marathonApp.name}}</span>
+      <span class="badge" *ngIf="marathonApp.project && project !== marathonApp.project">{{marathonApp.project}}</span>
+      <button class="delete-button" (click)="deleteMarathonApp(marathonApp, $event)">Delete</button>
     </span>
-    <button class="delete-button" (click)="deleteMarathonApp(marathonApp, $event)">Delete</button>
   </li>
 </ul>
 

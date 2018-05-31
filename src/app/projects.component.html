@@ -5,7 +5,7 @@
 <ul class="projects">
   <li *ngFor="let project of projects" (click)="onSelect(project)" [class.selected]="project === selectedProject">
     <span class="project-element">
-      <span class="badge"><span *ngIf="customer !== project.customer">{{project.customer}}: </span>{{project.name}}</span>
+      <span class="badge"><span *ngIf="project.customer && customer !== project.customer">{{project.customer}}: </span>{{project.name}}</span>
     </span>
     <button class="delete-button" (click)="deleteProject(project, $event)">Delete</button>
   </li>

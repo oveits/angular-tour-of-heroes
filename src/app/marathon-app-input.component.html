@@ -5,64 +5,51 @@
     <!-- projectName = {{projectName}}
     project = {{project}}
     marathonApp.project = {{marathonApp.project}} -->
-  <input id="projectName" name="projectName" class="form-control" autofocus
-    required minlength="4" appForbiddenName="undefined"
-    [(ngModel)]="marathonApp.project" #projectName="ngModel" 
-    placeholder="Project"  
-    pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
+    <input id="projectName" name="projectName" class="form-control" autofocus
+      required minlength="4" appForbiddenName="undefined"
+      [(ngModel)]="marathonApp.project" #projectName="ngModel" 
+      placeholder="Project"  
+      pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
 
     <div *ngIf="projectName && projectName.invalid && (projectName.dirty || projectName.touched)"
       class="alert alert-danger">
       <div *ngIf="projectName.errors.pattern">
         Project Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
       </div>
-      <div *ngIf="name.errors.required">
+      <div *ngIf="projectName.errors.required">
         Project Name is required.
       </div>
-      <div *ngIf="name.errors.minlength">
+      <div *ngIf="projectName.errors.minlength">
         Project Name must be at least 4 characters long.
       </div>
     </div>
   </div>
 
-  <input id="name" name="name" class="form-control"
+  <input id="marathonAppName" name="marathonAppName" class="form-control"
     required minlength="4" appForbiddenName="undefined"
-    [(ngModel)]="marathonApp.name" #name="ngModel" 
+    [(ngModel)]="marathonApp.name" #marathonAppName="ngModel" 
     placeholder="New Service" 
     pattern="[a-z][a-z0-9]+" />
     <!-- (keyup.enter)="save()" removed, since it would allow to save marathonApps that are invalid -->
     
-  <button *ngIf="name && !name.invalid && !projectName || ( projectName && !projectName.invalid )" (click)="save()">Save</button> 
+  <button *ngIf="marathonAppName && !marathonAppName.invalid && !projectName || ( projectName && !projectName.invalid )" (click)="save()">Save</button> 
     
   <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
   <div>
-    <div *ngIf="projectName && projectName.invalid && (projectName.dirty || projectName.touched)"
-      class="alert alert-danger">
-      <div *ngIf="projectName.errors.pattern">
-        Project Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
-      </div>
-      <div *ngIf="name.errors.required">
-        Project Name is required.
-      </div>
-      <div *ngIf="name.errors.minlength">
-        Project Name must be at least 4 characters long.
-      </div>
-    </div>
-
-    <div *ngIf="name && name.invalid && (name.dirty || name.touched)"
+    <div *ngIf="marathonAppName && marathonAppName.invalid && (marathonAppName.dirty || marathonAppName.touched)"
         class="alert alert-danger">
 
-      <div *ngIf="name.errors.required">
+      <div *ngIf="marathonAppName.errors.required">
         Service Name is required.
       </div>
-      <div *ngIf="name.errors.minlength">
+      <div *ngIf="marathonAppName.errors.minlength">
         Service Name must be at least 4 characters long.
       </div>
-      <div *ngIf="name.errors.forbiddenName">
+      <div *ngIf="marathonAppName.errors.forbiddenName">
         Service Name cannot be 'undefined'.
       </div>
-      <div *ngIf="name.errors.pattern">
+      <div *ngIf="marathonAppName.errors.pattern">
         Service Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
       </div>
 
