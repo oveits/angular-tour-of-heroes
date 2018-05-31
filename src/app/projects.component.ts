@@ -82,6 +82,7 @@ export class ProjectsComponent implements OnInit {
   onSelect(project: Project): void {
     this.selectedProject = project;
     this.addingProject = false;
+    this.router.navigate([this.exposedUrl, this.selectedProject.name, 'marathonapps']);
   }
 
   gotoDetail(): void {
