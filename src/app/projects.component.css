@@ -16,7 +16,7 @@
   background-color: #EEE;
   margin: .5em;
   padding: .5em;
-  height: 1.6em;
+  height: 5.6em;
   border-radius: 4px;
 }
 .projects li:hover {
@@ -44,9 +44,9 @@
   position: relative;
   left: -1px;
   top: -4px;
-  height: 1.8em;
+  height: 6.6em;
   margin-right: .8em;
-  border-radius: 4px 0 0 4px;
+  border-radius: 4px 4px 4px 4px;
 }
 button {
   font-family: Arial;

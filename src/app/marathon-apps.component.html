@@ -4,6 +4,11 @@
 
 <div *ngIf="null == marathonApps">Loading...</div>
 
+<button (click)="addMarathonApp()">Add New Service</button>
+<div *ngIf="addingMarathonApp">
+  <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input>
+</div>
+
 <ul class="marathonApps">
   <li *ngFor="let marathonApp of marathonApps" (click)="onSelect(marathonApp)" [class.selected]="marathonApp === selectedMarathonApp">
     <span class="marathonApp-element">
@@ -20,11 +25,6 @@
 <!-- <button (click)="close()">Close</button> -->
 
 <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
-
-<button (click)="addMarathonApp()">Add New Service</button>
-<div *ngIf="addingMarathonApp">
-  <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input>
-</div>
 
 <div *ngIf="selectedMarathonApp">
   <h2>

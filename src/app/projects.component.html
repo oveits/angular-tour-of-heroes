@@ -4,6 +4,11 @@
 
 <div *ngIf="null == projects">Loading...</div>
 
+<button (click)="addProject()">Add New Project</button>
+<div *ngIf="addingProject">
+  <my-project-input (close)="close($event)" addingProject=true></my-project-input>
+</div>
+
 <ul class="projects">
   <li *ngFor="let project of projects" (click)="onSelect(project)" [class.selected]="project === selectedProject">
     <span class="project-element">
@@ -14,11 +19,6 @@
 </ul>
 
 <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
-
-<button (click)="addProject()">Add New Project</button>
-<div *ngIf="addingProject">
-  <my-project-input (close)="close($event)" addingProject=true></my-project-input>
-</div>
 
 <div *ngIf="selectedProject">
   <h2>
