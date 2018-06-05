@@ -6,6 +6,7 @@ export class MarathonApp extends RestItem {
     project: String;
     instances: Number;
     healthyness: number;
+    url: String;
 
     // deployments: String;
     // configuredInstances: String;

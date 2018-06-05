@@ -9,7 +9,7 @@
     required minlength="4" appForbiddenName="undefined"
     [(ngModel)]="project.customer" #customerName="ngModel" 
     placeholder="Customer"  
-    pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
+    pattern="[a-z][a-z0-9]+" />
 
     <div *ngIf="customerName && customerName.invalid && (customerName.dirty || customerName.touched)"
       class="alert alert-danger">
@@ -25,11 +25,11 @@
     </div>
   </div>
 
-  <input id="projectName" name="projectName" class="form-control"
+  <input id="projectName" name="projectName" class="form-control" autofocus
     required minlength="4" appForbiddenName="undefined"
     [(ngModel)]="project.name" #projectName="ngModel" 
     placeholder="New Project" 
-    pattern="[a-z][a-z0-9]+" />
+    pattern="[a-z][a-z0-9]{3,}([\/]?[a-z][a-z0-9]{3,})*" />
     <!-- (keyup.enter)="save()" removed, since it would allow to save projects that are invalid -->
     
   <button *ngIf="projectName && !projectName.invalid && !customerName || ( customerName && !customerName.invalid )" (click)="save()">Save</button> 
@@ -50,7 +50,7 @@
         Project Name cannot be 'undefined'.
       </div>
       <div *ngIf="projectName.errors.pattern">
-        Project Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers
+        Project Name must start with a lowercase letter [a-z] and can consist of lowercase letters and/or numbers and/or "/" in between
       </div>
 
     </div>

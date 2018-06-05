@@ -13,7 +13,7 @@ import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MarathonAppInterceptor implements HttpInterceptor {
-    private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1Mjc4NzY5MzQsImlhdCI6MTUyNzQ0NDkzNCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.mlqmjB0Qwo-mHN3gSDAvzrU9Eo0PNQSfE9zOcevNJyk";
+    // private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1Mjc4NzY5MzQsImlhdCI6MTUyNzQ0NDkzNCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.mlqmjB0Qwo-mHN3gSDAvzrU9Eo0PNQSfE9zOcevNJyk";
     private urlPattern = '.*marathon.*apps.*'
     // TODO: url is now defined in './marathon-app.service.ts' while the authToken is defined here
     //       Please Improve the configuration handling! 
@@ -34,17 +34,17 @@ export class MarathonAppInterceptor implements HttpInterceptor {
         //   return next.handle(request);
         // }
 
-        const authToken = this.authToken; // TODO: const authToken = this.auth.getAuthorizationToken();
-        const authReq = request.clone({
-            headers: request.headers.set('Authorization', authToken)
-        });
+        // const authToken = this.authToken; // TODO: const authToken = this.auth.getAuthorizationToken();
+        // const authReq = request.clone({
+        //     headers: request.headers.set('Authorization', authToken)
+        // });
 
-        request = request.clone({
-            headers: request.headers.set('Authorization', 'token=' + authToken)
-        });
-        request = request.clone({
-            headers: request.headers.set('Content-Type', 'application/json')
-        });
+        // request = request.clone({
+        //     headers: request.headers.set('Authorization', 'token=' + authToken)
+        // });
+        // request = request.clone({
+        //     headers: request.headers.set('Content-Type', 'application/json')
+        // });
 
         if(request.method === 'POST' || request.method === 'PUT'){
             request = request.clone({

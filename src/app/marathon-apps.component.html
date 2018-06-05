@@ -1,4 +1,6 @@
-<h2>Services<span *ngIf="project"> of {{project}}</span></h2>
+<!-- <h2>Services<span *ngIf="project"> of {{project}}</span></h2> -->
+
+<h2>Services > <span *ngIf="project"><a routerLink="/projects" routerLinkActive="active">Projects</a> > {{project}} </span></h2>
 
 <div *ngIf="null == marathonApps">Loading...</div>
 
@@ -10,7 +12,12 @@
       <button class="delete-button" (click)="deleteMarathonApp(marathonApp, $event)">Delete</button>
     </span>
   </li>
+  <!-- <li (click)="addMarathonApp()">+ Add New Service <span *ngIf="addingMarathonApp">
+      <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input>
+  </span></li> -->
 </ul>
+
+<!-- <button (click)="close()">Close</button> -->
 
 <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
