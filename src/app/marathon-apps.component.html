@@ -4,16 +4,20 @@
 
 <div *ngIf="null == marathonApps">Loading...</div>
 
-<button (click)="addMarathonApp()">Add New Service</button>
+<!-- <button class="marathonApps marathonApp-element" (click)="addMarathonApp()">Add New Service</button> -->
 <div *ngIf="addingMarathonApp">
   <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input>
 </div>
 
 <ul class="marathonApps">
+    <li (click)="addMarathonApp()">+ Add New Service <span *ngIf="addingMarathonApp">
+        <!-- <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input> -->
+    </span></li>
   <li *ngFor="let marathonApp of marathonApps" (click)="onSelect(marathonApp)" [class.selected]="marathonApp === selectedMarathonApp">
     <span class="marathonApp-element">
-      <span class="badge">{{marathonApp.name}}</span>
+      <span class="badge" [class.healthy]="marathonApp.healthyness === 1" [class.unhealthy]="marathonApp.healthyness === 0">{{marathonApp.name}}</span>
       <span class="badge" *ngIf="marathonApp.project && project !== marathonApp.project">{{marathonApp.project}}</span>
+      <span >{{marathonApp.instances}}</span>
       <button class="delete-button" (click)="deleteMarathonApp(marathonApp, $event)">Delete</button>
     </span>
   </li>

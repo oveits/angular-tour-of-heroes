@@ -4,12 +4,15 @@
 
 <div *ngIf="null == projects">Loading...</div>
 
-<button (click)="addProject()">Add New Project</button>
+<!-- <button (click)="addProject()">Add New Project</button> -->
 <div *ngIf="addingProject">
   <my-project-input (close)="close($event)" addingProject=true></my-project-input>
 </div>
 
 <ul class="projects">
+    <li (click)="addProject()">
+      + Add New Project 
+    </li>
   <li *ngFor="let project of projects" (click)="onSelect(project)" [class.selected]="project === selectedProject">
     <span class="project-element">
       <span class="badge"><span *ngIf="project.customer && customer !== project.customer">{{project.customer}}: </span>{{project.name}}</span>
