@@ -58,6 +58,11 @@ export class MarathonAppsComponent implements OnInit {
     this.addingMarathonApp = true;
     this.selectedMarathonApp = null;
     // this.nextRefreshSub = this.refresh(this.msecMin);
+    // this.intervalRefreshSub.unsubscribe;
+    // this.intervalRefreshSub = interval(2490)
+    //   .subscribe(res => {
+    //     this.getMarathonApps(this.project);
+    //   });
   }
 
   close(savedMarathonApp: MarathonApp): void {
@@ -80,7 +85,6 @@ export class MarathonAppsComponent implements OnInit {
 
   ngOnInit(): void {
     // not needed, since the Url is set in the Service, and is not part of the MarathonApp class:
-    //this.marathonAppService.setUrl((new MarathonApp).url);
     this.route.params.forEach((params: Params) => {
       if (params['project'] !== undefined) {
         this.project = params['project'];
@@ -114,39 +118,30 @@ export class MarathonAppsComponent implements OnInit {
     //   })
     // );
 
-    // // playing around with backoff via timer:
+    // // playing around with backoff via timer (seems to create more than one parallel timer)
     // this.nextRefreshSub = this.refresh(this.msecMin);
   }
 
-  // refresh(msec){
-  //   // // cancel old subscription, if present:
-  //   // if(typeof(this.nextRefreshSub) !== undefined) {
-  //   //   this.nextRefreshSub.unsubscribe();
-  //   // }
-
-  //   // create new subscription:
-  //   let localSubscription = 
-  //     timer(msec)
-  //       .subscribe(res => {
-  //         this.getMarathonApps(this.project);
-  //         console.log(`refreshing msec = ${msec}`);
-  //         let msecNew = msec * 1.5;
-  //         if(msecNew > this.msecMax) {
-  //           msecNew = this.msecMax;
-  //         }
-
-  //         if(typeof(this.nextRefreshSub) !== undefined) {
-  //           this.nextRefreshSub.unsubscribe();
-  //         }
-  //         this.nextRefreshSub = this.refresh(msecNew);
-  //       });
-  //   return localSubscription;
-  // }
+/*   refresh(msec){
+    // create new subscription:
+    let localSubscription = 
+      timer(msec)
+        .subscribe(res => {
+          this.getMarathonApps(this.project);
+          console.log(`refreshing msec = ${msec}`);
+          let msecNew = msec * 1.5;
+          if(msecNew > this.msecMax) {
+            msecNew = this.msecMax;
+          }
   
-  // onSelectOld(marathonApp: MarathonApp): void {
-  //   this.selectedMarathonApp = marathonApp;
-  //   this.addingMarathonApp = false;
-  // }
+          if(typeof(this.nextRefreshSub) !== undefined) {
+            this.nextRefreshSub.unsubscribe();
+          }
+          this.nextRefreshSub = this.refresh(msecNew);
+        });
+    return localSubscription;
+  } */
+
 
   onDestroy(){
     this.intervalRefreshSub.unsubscribe;
