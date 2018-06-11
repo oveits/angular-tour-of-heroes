@@ -4,6 +4,11 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
 import { RestItem } from './rest-item';
+import { interval } from "rxjs";
+// import { timer } from "rxjs";
+// import { map } from "rxjs/operators";
+// import { Observable } from "rxjs";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'marathon-apps',
@@ -18,6 +23,12 @@ export class MarathonAppsComponent implements OnInit {
   showNgFor = false;
   exposedUrl: String = '/marathonapps';
   project: String = null;
+  // msecMin: number = 500;
+  // msecMax: number = 30000;
+  msec: number = 5000;
+  // private nextRefreshSub : Subscription;
+  private intervalRefreshSub : Subscription;
+
 
   constructor(private router: Router, 
     private marathonAppService: MarathonAppService,
@@ -46,6 +57,7 @@ export class MarathonAppsComponent implements OnInit {
   addMarathonApp(): void {
     this.addingMarathonApp = true;
     this.selectedMarathonApp = null;
+    // this.nextRefreshSub = this.refresh(this.msecMin);
   }
 
   close(savedMarathonApp: MarathonApp): void {
@@ -62,11 +74,12 @@ export class MarathonAppsComponent implements OnInit {
       if (this.selectedMarathonApp === marathonApp) {
         this.selectedMarathonApp = null;
       }
+      // this.nextRefreshSub = this.refresh(this.msecMin);
     }, error => (this.error = error));
   }
 
   ngOnInit(): void {
-    // not needed, sind the Url is set in the Service, and is not part of the MarathonApp class:
+    // not needed, since the Url is set in the Service, and is not part of the MarathonApp class:
     //this.marathonAppService.setUrl((new MarathonApp).url);
     this.route.params.forEach((params: Params) => {
       if (params['project'] !== undefined) {
@@ -75,13 +88,74 @@ export class MarathonAppsComponent implements OnInit {
       } else {
         this.getMarathonApps();
       }
-    });
-    
+    });  
+
+    // const myNumbers = Observable.interval(1000);
+    // myNumbers.subscribe((number:Number) => {
+    //   console.log(number);
+    // });
+
+    // // works fine:
+    // const secondsCounter = interval(1000);
+    // // Subscribe to begin publishing values
+    // secondsCounter.subscribe(n =>
+    // console.log(`It's been ${n} seconds since subscribing!`));
+
+    // works fine; implements static interval:
+    this.intervalRefreshSub = interval(this.msec)
+      .subscribe(res => {
+        this.getMarathonApps(this.project);
+      });
+
+    // // is not called, because subscribe is missing?
+    // interval(1000).pipe(
+    //   map((x) => { // your code 
+    //     console.log(x);
+    //   })
+    // );
+
+    // // playing around with backoff via timer:
+    // this.nextRefreshSub = this.refresh(this.msecMin);
   }
+
+  // refresh(msec){
+  //   // // cancel old subscription, if present:
+  //   // if(typeof(this.nextRefreshSub) !== undefined) {
+  //   //   this.nextRefreshSub.unsubscribe();
+  //   // }
+
+  //   // create new subscription:
+  //   let localSubscription = 
+  //     timer(msec)
+  //       .subscribe(res => {
+  //         this.getMarathonApps(this.project);
+  //         console.log(`refreshing msec = ${msec}`);
+  //         let msecNew = msec * 1.5;
+  //         if(msecNew > this.msecMax) {
+  //           msecNew = this.msecMax;
+  //         }
+
+  //         if(typeof(this.nextRefreshSub) !== undefined) {
+  //           this.nextRefreshSub.unsubscribe();
+  //         }
+  //         this.nextRefreshSub = this.refresh(msecNew);
+  //       });
+  //   return localSubscription;
+  // }
   
+  // onSelectOld(marathonApp: MarathonApp): void {
+  //   this.selectedMarathonApp = marathonApp;
+  //   this.addingMarathonApp = false;
+  // }
+
+  onDestroy(){
+    this.intervalRefreshSub.unsubscribe;
+  }
+
   onSelect(marathonApp: MarathonApp): void {
     this.selectedMarathonApp = marathonApp;
     this.addingMarathonApp = false;
+    this.router.navigate([this.exposedUrl, this.selectedMarathonApp.id]);
   }
 
   gotoDetail(): void {
