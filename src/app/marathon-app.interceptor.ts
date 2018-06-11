@@ -52,12 +52,14 @@ export class MarathonAppInterceptor implements HttpInterceptor {
             });
         }
 
+        //this.restItems = res['apps'].sort(this.compareById);
+
         return next.handle(request).pipe(map(event =>{
           console.log("event");
           console.log(event);
           if (request.method === 'GET' && event instanceof HttpResponse) {
               console.log("Called Response Interceptor for GET");
-              event = event.clone({ body: event.body['apps'].map(item => {
+              event = event.clone({ body: event.body['apps'].sort(this.compareById).map(item => {
                 var idArray = item.id.split("/");
                 idArray.shift(); // remove leading empty element created because id starts with "/"
                 var name = idArray.pop();
@@ -155,5 +157,15 @@ export class MarathonAppInterceptor implements HttpInterceptor {
       "fetch": [],
       "constraints": []
     };
+  }
+
+  compareById(app1, app2){
+    if (app1.id < app2.id) {
+      return -1;
+    }
+    if (app1.id > app2.id) {
+      return 1;
+    }
+    return 0;
   }
 }
