@@ -26,7 +26,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
   msecMin: number = 1000;
   msecMax: number = 30000;
   backoffFactor = 1.5;
-  msec: number = 5000;
+  // msec: number = 5000;
   // private nextRefreshSub : Subscription;
   private allSubscriptions : Subscription[] = new Array<Subscription>();
   private intervalRefreshSub : Subscription;
@@ -76,7 +76,9 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
       if (this.selectedMarathonApp === marathonApp) {
         this.selectedMarathonApp = null;
       }
-      this.refresh(this.msecMin);
+
+      // not really needed:
+      //this.refresh(this.msecMin);
     }, error => (this.error = error));
   }
 
@@ -127,7 +129,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     refresh(msec) : void {
       // cancel old refresh timers:
       this.allSubscriptions.map(sub => sub.unsubscribe());
-      // garbage collection: only active subscritptions are kept:
+      // garbage collection: only active subscriptions are kept:
       this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
 
       this.allSubscriptions.push( 
@@ -159,7 +161,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     // }
     // cancel old refresh timers:
     this.allSubscriptions.map(sub => sub.unsubscribe());
-    // garbage collection: only active subscritptions are kept:
+    // garbage collection: only active subscriptions are kept:
     this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
   }
 
