@@ -5,7 +5,7 @@ import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
 import { RestItem } from './rest-item';
 import { interval } from "rxjs";
-// import { timer } from "rxjs";
+import { timer } from "rxjs";
 // import { map } from "rxjs/operators";
 // import { Observable } from "rxjs";
 import { Subscription } from "rxjs";
@@ -23,10 +23,12 @@ export class MarathonAppsComponent implements OnInit {
   showNgFor = false;
   exposedUrl: String = '/marathonapps';
   project: String = null;
-  // msecMin: number = 500;
-  // msecMax: number = 30000;
+  msecMin: number = 1000;
+  msecMax: number = 30000;
+  backoffFactor = 1.5;
   msec: number = 5000;
   // private nextRefreshSub : Subscription;
+  private allSubscriptions : Subscription[] = new Array<Subscription>();
   private intervalRefreshSub : Subscription;
 
 
@@ -58,11 +60,8 @@ export class MarathonAppsComponent implements OnInit {
     this.addingMarathonApp = true;
     this.selectedMarathonApp = null;
     // this.nextRefreshSub = this.refresh(this.msecMin);
-    // this.intervalRefreshSub.unsubscribe;
-    // this.intervalRefreshSub = interval(2490)
-    //   .subscribe(res => {
-    //     this.getMarathonApps(this.project);
-    //   });
+    this.allSubscriptions.push(this.refresh(this.msecMin));
+    console.log(this.allSubscriptions);
   }
 
   close(savedMarathonApp: MarathonApp): void {
@@ -79,12 +78,16 @@ export class MarathonAppsComponent implements OnInit {
       if (this.selectedMarathonApp === marathonApp) {
         this.selectedMarathonApp = null;
       }
+      //
       // this.nextRefreshSub = this.refresh(this.msecMin);
+      this.allSubscriptions.push(this.refresh(this.msecMin));
+      console.log(this.allSubscriptions);
+      //
     }, error => (this.error = error));
   }
 
   ngOnInit(): void {
-    // not needed, since the Url is set in the Service, and is not part of the MarathonApp class:
+
     this.route.params.forEach((params: Params) => {
       if (params['project'] !== undefined) {
         this.project = params['project'];
@@ -106,10 +109,12 @@ export class MarathonAppsComponent implements OnInit {
     // console.log(`It's been ${n} seconds since subscribing!`));
 
     // works fine; implements static interval:
-    this.intervalRefreshSub = interval(this.msec)
+/*
+     this.intervalRefreshSub = interval(this.msec)
       .subscribe(res => {
         this.getMarathonApps(this.project);
-      });
+      }); 
+*/
 
     // // is not called, because subscribe is missing?
     // interval(1000).pipe(
@@ -118,29 +123,46 @@ export class MarathonAppsComponent implements OnInit {
     //   })
     // );
 
-    // // playing around with backoff via timer (seems to create more than one parallel timer)
+    // playing around with backoff via timer (seems to create more than one parallel timer)
     // this.nextRefreshSub = this.refresh(this.msecMin);
+    this.allSubscriptions.push(this.refresh(this.msecMin));
   }
 
-/*   refresh(msec){
+ 
+    // does not work correctly (creates more than one parallel timer):
+    refresh(msec){
     // create new subscription:
     let localSubscription = 
       timer(msec)
         .subscribe(res => {
           this.getMarathonApps(this.project);
           console.log(`refreshing msec = ${msec}`);
-          let msecNew = msec * 1.5;
+
+          let msecNew = msec
+          if( ! this.addingMarathonApp ) {
+            msecNew = msec * this.backoffFactor;
+          }
+          
           if(msecNew > this.msecMax) {
             msecNew = this.msecMax;
           }
   
-          if(typeof(this.nextRefreshSub) !== undefined) {
-            this.nextRefreshSub.unsubscribe();
-          }
-          this.nextRefreshSub = this.refresh(msecNew);
+          // if(typeof(this.nextRefreshSub) !== undefined) {
+          //   this.nextRefreshSub.unsubscribe();
+          // }
+
+          
+
+          this.allSubscriptions.map(sub => sub.unsubscribe());
+          // garbage collection: only active subscritptions are kept:
+          this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
+
+          // this.nextRefreshSub = this.refresh(msecNew);
+          this.allSubscriptions.push(this.refresh(msecNew));
         });
     return localSubscription;
-  } */
+  } 
+ 
 
 
   onDestroy(){
