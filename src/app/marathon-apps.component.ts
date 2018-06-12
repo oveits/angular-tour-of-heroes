@@ -4,10 +4,9 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
 import { RestItem } from './rest-item';
-import { interval } from "rxjs";
+// import { interval } from "rxjs";
 import { timer } from "rxjs";
-// import { map } from "rxjs/operators";
-// import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -23,13 +22,16 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
   showNgFor = false;
   exposedUrl: String = '/marathonapps';
   project: String = null;
+
+  // for dynamic refresh interval with exponential backoff:
   msecMin: number = 1000;
   msecMax: number = 30000;
   backoffFactor = 1.5;
-  // msec: number = 5000;
-  // private nextRefreshSub : Subscription;
   private allSubscriptions : Subscription[] = new Array<Subscription>();
-  private intervalRefreshSub : Subscription;
+
+  // for static refresh interval (commented out in favor of the dynamic interval with exponential backoff)
+  // msec: number = 5000;
+  // private intervalRefreshSub : Subscription;
 
 
   constructor(private router: Router, 
@@ -93,39 +95,19 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
       }
     });  
 
-    // const myNumbers = Observable.interval(1000);
-    // myNumbers.subscribe((number:Number) => {
-    //   console.log(number);
-    // });
+    // // refresh with static interval:
+    //  this.intervalRefreshSub = interval(this.msec)
+    //   .subscribe(res => {
+    //     this.getMarathonApps(this.project);
+    //   }); 
 
-    // // works fine:
-    // const secondsCounter = interval(1000);
-    // // Subscribe to begin publishing values
-    // secondsCounter.subscribe(n =>
-    // console.log(`It's been ${n} seconds since subscribing!`));
 
-    // works fine; implements static interval:
-/*
-     this.intervalRefreshSub = interval(this.msec)
-      .subscribe(res => {
-        this.getMarathonApps(this.project);
-      }); 
-*/
-
-    // // is not called, because subscribe is missing?
-    // interval(1000).pipe(
-    //   map((x) => { // your code 
-    //     console.log(x);
-    //   })
-    // );
-
-    // playing around with backoff via timer (seems to create more than one parallel timer)
-    // this.nextRefreshSub = this.refresh(this.msecMin);
+    // refresh with exponential backoff:
     this.refresh(this.msecMin);
   }
 
  
-    // does not work correctly (creates more than one parallel timer):
+    // refresh with exponential backoff (tested successfully):
     refresh(msec) : void {
       // cancel old refresh timers:
       this.allSubscriptions.map(sub => sub.unsubscribe());
@@ -156,9 +138,12 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(){
+    // // for refresh with static interval:
     // if(typeof(this.intervalRefreshSub) !== undefined) {
     //   this.intervalRefreshSub.unsubscribe();
     // }
+
+    // for refresh with exponential backoff:
     // cancel old refresh timers:
     this.allSubscriptions.map(sub => sub.unsubscribe());
     // garbage collection: only active subscriptions are kept:
