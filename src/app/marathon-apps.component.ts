@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
@@ -15,7 +15,7 @@ import { Subscription } from "rxjs";
   templateUrl: './marathon-apps.component.html',
   styleUrls: ['./marathon-apps.component.css']
 })
-export class MarathonAppsComponent implements OnInit {
+export class MarathonAppsComponent implements OnInit, OnDestroy {
   marathonApps: MarathonApp[];
   selectedMarathonApp: MarathonApp;
   addingMarathonApp = false;
@@ -59,9 +59,7 @@ export class MarathonAppsComponent implements OnInit {
   addMarathonApp(): void {
     this.addingMarathonApp = true;
     this.selectedMarathonApp = null;
-    // this.nextRefreshSub = this.refresh(this.msecMin);
-    this.allSubscriptions.push(this.refresh(this.msecMin));
-    console.log(this.allSubscriptions);
+    this.refresh(this.msecMin);
   }
 
   close(savedMarathonApp: MarathonApp): void {
@@ -78,11 +76,7 @@ export class MarathonAppsComponent implements OnInit {
       if (this.selectedMarathonApp === marathonApp) {
         this.selectedMarathonApp = null;
       }
-      //
-      // this.nextRefreshSub = this.refresh(this.msecMin);
-      this.allSubscriptions.push(this.refresh(this.msecMin));
-      console.log(this.allSubscriptions);
-      //
+      this.refresh(this.msecMin);
     }, error => (this.error = error));
   }
 
@@ -125,48 +119,48 @@ export class MarathonAppsComponent implements OnInit {
 
     // playing around with backoff via timer (seems to create more than one parallel timer)
     // this.nextRefreshSub = this.refresh(this.msecMin);
-    this.allSubscriptions.push(this.refresh(this.msecMin));
+    this.refresh(this.msecMin);
   }
 
  
     // does not work correctly (creates more than one parallel timer):
-    refresh(msec){
-    // create new subscription:
-    let localSubscription = 
-      timer(msec)
-        .subscribe(res => {
-          this.getMarathonApps(this.project);
-          console.log(`refreshing msec = ${msec}`);
+    refresh(msec) : void {
+      // cancel old refresh timers:
+      this.allSubscriptions.map(sub => sub.unsubscribe());
+      // garbage collection: only active subscritptions are kept:
+      this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
 
-          let msecNew = msec
-          if( ! this.addingMarathonApp ) {
-            msecNew = msec * this.backoffFactor;
-          }
-          
-          if(msecNew > this.msecMax) {
-            msecNew = this.msecMax;
-          }
-  
-          // if(typeof(this.nextRefreshSub) !== undefined) {
-          //   this.nextRefreshSub.unsubscribe();
-          // }
+      this.allSubscriptions.push( 
+        timer(msec)
+          .subscribe(res => {
+            this.getMarathonApps(this.project);
+            console.log(`refreshing msec = ${msec}`);
 
-          
+            let msecNew = msec
+            if( ! this.addingMarathonApp ) {
+              msecNew = msec * this.backoffFactor;
+            }
+            
+            if(msecNew > this.msecMax) {
+              msecNew = this.msecMax;
+            }
 
-          this.allSubscriptions.map(sub => sub.unsubscribe());
-          // garbage collection: only active subscritptions are kept:
-          this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
-
-          // this.nextRefreshSub = this.refresh(msecNew);
-          this.allSubscriptions.push(this.refresh(msecNew));
-        });
-    return localSubscription;
+            console.log(`msecNew = ${msecNew}`);
+    
+            this.refresh(msecNew);
+          }));
   } 
  
 
 
-  onDestroy(){
-    this.intervalRefreshSub.unsubscribe;
+  ngOnDestroy(){
+    // if(typeof(this.intervalRefreshSub) !== undefined) {
+    //   this.intervalRefreshSub.unsubscribe();
+    // }
+    // cancel old refresh timers:
+    this.allSubscriptions.map(sub => sub.unsubscribe());
+    // garbage collection: only active subscritptions are kept:
+    this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
   }
 
   onSelect(marathonApp: MarathonApp): void {
