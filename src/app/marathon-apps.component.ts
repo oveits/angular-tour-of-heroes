@@ -66,7 +66,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
   addMarathonApp(): void {
     this.addingMarathonApp = true;
     this.selectedMarathonApp = null;
-    this.refresh(this.msecMin);
+    // this.refresh(this.msecMin);
   }
 
   close(savedMarathonApp: MarathonApp): void {
@@ -115,18 +115,18 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     //   })
     // )
 
-    // // works fine with intervalMarathonApps$$ | async | async in the HTML template:
-    // this.intervalMarathonApps$$ = interval(5000)
-    // .pipe(map((x) => {
-    //      console.log(x);
-    //      return this.marathonAppService.getAll()
-    //       .pipe(map((marathonApps) => {
-    //         this.marathonApps = marathonApps.filter(app => app.project === this.project);
-    //         return this.marathonApps;
-    //       }))
-    //     }));
+    // works fine with intervalMarathonApps$$ | async | async in the HTML template:
+    this.intervalMarathonApps$$ = interval(5000)
+    .pipe(map((x) => {
+         console.log(x);
+         return this.marathonAppService.getAll()
+          .pipe(map((marathonApps) => {
+            this.marathonApps = marathonApps.filter(app => app.project === this.project);
+            return this.marathonApps;
+          }))
+        }));
 
-    this.refreshDelayed$$ = this.refreshDelayed(this.msecMin);
+    // this.refreshDelayed$$ = this.refreshDelayed(this.msecMin);
 
 
     // refresh with exponential backoff:
