@@ -6,8 +6,12 @@ import { MarathonAppService } from './marathon-app.service';
 import { RestItem } from './rest-item';
 import { interval } from "rxjs";
 import { timer } from "rxjs";
-import { map, filter } from "rxjs/operators";
+import { map, filter, catchError } from "rxjs/operators";
 import { Subscription, Observable } from "rxjs";
+
+// for handleError:
+import { HttpErrorResponse  } from '@angular/common/http';
+import { throwError as observableThrowError } from 'rxjs';
 
 
 @Component({
@@ -43,23 +47,37 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     private marathonAppService: MarathonAppService,
     private route: ActivatedRoute) {}
 
-  getMarathonApps(myProject: String = null): void {
-    this.marathonAppService
+  // getMarathonApps(myProject: String = null): void {
+  //   this.marathonAppService
+  //     .getAll()
+  //     .subscribe(
+  //       marathonApps => {
+  //         this.marathonApps = marathonApps as MarathonApp[];
+  //         if(myProject) {
+  //           this.project = myProject;
+  //           this.marathonApps = this.marathonApps.filter(app => app.project === myProject)
+  //         }
+  //         console.log(this.marathonApps);
+  //       }
+  //       ,
+  //       error => {
+  //         console.log(error);
+  //         this.error = error;
+  //       }
+  //     )
+  // }
+
+  getMarathonApps$(myProject: String = null): Observable<void | {}> {
+    return this.marathonAppService
       .getAll()
-      .subscribe(
-        marathonApps => {
-          this.marathonApps = marathonApps as MarathonApp[];
-          if(myProject) {
-            this.project = myProject;
-            this.marathonApps = this.marathonApps.filter(app => app.project === myProject)
-          }
-          console.log(this.marathonApps);
-        }
-        ,
-        error => {
-          console.log(error);
-          this.error = error;
-        }
+      .pipe(
+        map(marathonApps => {
+          let filteredMarathonApps = marathonApps.filter(app => app.project === myProject) as MarathonApp[];
+          console.log(filteredMarathonApps);
+          this.marathonApps = filteredMarathonApps;
+          //return filteredMarathonApps;
+        }),
+        catchError(this.handleError)
       )
   }
   
@@ -67,13 +85,13 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     this.addingMarathonApp = true;
     this.selectedMarathonApp = null;
     // this.refresh(this.msecMin);
-    this.refreshDelayed$$ = this.refreshDelayed(this.msecMin);
+    this.refreshDelayed$$ = this.refreshDelayed$(this.msecMin, this.getMarathonApps$(this.project));
   }
 
   close(savedMarathonApp: MarathonApp): void {
     this.addingMarathonApp = false;
     if (savedMarathonApp) {
-      this.getMarathonApps(this.project);
+      this.getMarathonApps$(this.project);
     }
   }
 
@@ -95,9 +113,9 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     this.route.params.forEach((params: Params) => {
       if (params['project'] !== undefined) {
         this.project = params['project'];
-        this.getMarathonApps(this.project);
+        // this.getMarathonApps(this.project);
       } else {
-        this.getMarathonApps();
+        // this.getMarathonApps();
       }
     });  
 
@@ -127,14 +145,14 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     //       }))
     //     }));
 
-    this.refreshDelayed$$ = this.refreshDelayed(this.msecMin);
+    this.refreshDelayed$$ = this.refreshDelayed$(this.msecMin, this.getMarathonApps$(this.project));
 
 
     // refresh with exponential backoff:
     //this.refresh(this.msecMin);
   }
 
-  refreshDelayed(msec) {
+  refreshDelayedOld(msec) {
     return timer(msec)
     .pipe(map((x) => {
       console.log(x);
@@ -154,8 +172,35 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
 
          console.log(`msecNew = ${msecNew}`);
  
-         this.refreshDelayed$$ = this.refreshDelayed(msecNew);
-         return this.refreshDelayed(msecNew);
+         this.refreshDelayed$$ = this.refreshDelayedOld(msecNew);
+         return this.refreshDelayedOld(msecNew);
+
+        //  return this.marathonApps;
+       }))
+     }));
+  }
+
+  refreshDelayed$(msec, myFunction) {
+    return timer(msec)
+    .pipe(map((x) => {
+      console.log(x);
+      return myFunction
+       .pipe(map(() => {
+         
+         console.log(`refreshing msec = ${msec}`);
+         let msecNew = msec
+         if( ! this.addingMarathonApp ) {
+           msecNew = msec * this.backoffFactor;
+         }
+         
+         if(msecNew > this.msecMax) {
+           msecNew = this.msecMax;
+         }
+
+         console.log(`msecNew = ${msecNew}`);
+ 
+         this.refreshDelayed$$ = this.refreshDelayed$(msecNew, myFunction);
+         return this.refreshDelayed$(msecNew, myFunction);
 
         //  return this.marathonApps;
        }))
@@ -163,36 +208,42 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
   }
 
  
-  // refresh with exponential backoff (tested successfully):
-  refresh(msec) : void {
-    // cancel old refresh timers:
-    this.allSubscriptions.map(sub => sub.unsubscribe());
-    // garbage collection: only active subscriptions are kept:
-    this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
+  // // refresh with exponential backoff (tested successfully):
+  // refresh(msec) : void {
+  //   // cancel old refresh timers:
+  //   this.allSubscriptions.map(sub => sub.unsubscribe());
+  //   // garbage collection: only active subscriptions are kept:
+  //   this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
 
-    this.allSubscriptions.push( 
-      timer(msec)
-        .subscribe(res => {
-          this.getMarathonApps(this.project);
-          console.log(`refreshing msec = ${msec}`);
+  //   this.allSubscriptions.push( 
+  //     timer(msec)
+  //       .subscribe(res => {
+  //         this.getMarathonApps(this.project);
+  //         console.log(`refreshing msec = ${msec}`);
 
-          let msecNew = msec
-          if( ! this.addingMarathonApp ) {
-            msecNew = msec * this.backoffFactor;
-          }
+  //         let msecNew = msec
+  //         if( ! this.addingMarathonApp ) {
+  //           msecNew = msec * this.backoffFactor;
+  //         }
           
-          if(msecNew > this.msecMax) {
-            msecNew = this.msecMax;
-          }
+  //         if(msecNew > this.msecMax) {
+  //           msecNew = this.msecMax;
+  //         }
 
-          console.log(`msecNew = ${msecNew}`);
+  //         console.log(`msecNew = ${msecNew}`);
   
-          this.refresh(msecNew);
-        })
-    );
+  //         this.refresh(msecNew);
+  //       })
+  //   );
+  // }
+
+
+  // not sure, whether this handleError function makes sense. Errors are caught in getAl() already...
+  protected handleError(error: any) {
+    console.log(error);
+    this.error = error;
+    return error;
   }
-
-
 
 
   ngOnDestroy(){

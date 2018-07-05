@@ -13,7 +13,7 @@ import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MarathonInterceptor implements HttpInterceptor {
-    private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjkwNzY5NTUsImlhdCI6MTUyODY0NDk1NSwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.g3j6id3MhjxupUbNldVjxaRb3l-72bi6iCNSY220WGw";
+    private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MzEyNDc5OTAsImlhdCI6MTUzMDgxNTk5MCwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.xyhbGfsZHgtYQGj6qME1xh1tSPep2LxGolqAP-4u19I";
     private urlPattern = '.*marathon.*'
     // TODO: url is now defined in './marathon-app.service.ts' while the authToken is defined here
     //       Please Improve the configuration handling! 
@@ -35,9 +35,9 @@ export class MarathonInterceptor implements HttpInterceptor {
         // }
 
         const authToken = this.authToken; // TODO: const authToken = this.auth.getAuthorizationToken();
-        const authReq = request.clone({
-            headers: request.headers.set('Authorization', authToken)
-        });
+        // const authReq = request.clone({
+        //     headers: request.headers.set('Authorization', authToken)
+        // });
 
         request = request.clone({
             headers: request.headers.set('Authorization', 'token=' + authToken)
