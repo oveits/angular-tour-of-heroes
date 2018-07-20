@@ -119,7 +119,7 @@ export class MarathonFakeInterceptor implements HttpInterceptor {
                 this.setHealthyAfterDelay(newApp.id, this.msec);
 
                 // respond 200 OK
-                return of(new HttpResponse({ status: 200 }));
+                return of(new HttpResponse({ status: 201 }));
             }
 
             // delete user

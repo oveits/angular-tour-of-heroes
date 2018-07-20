@@ -35,6 +35,7 @@ import { ProjectInputComponent } from './project-input.component';
 
 // import { marathonFakeProvider } from './marathon-fake.interceptor';
 import { MarathonFakeInterceptor } from './marathon-fake.interceptor';
+import { MarathonProjectFakeInterceptor } from './marathon-project-fake.interceptor';
 
 @NgModule({
   imports: [
@@ -71,7 +72,8 @@ import { MarathonFakeInterceptor } from './marathon-fake.interceptor';
     { provide: HTTP_INTERCEPTORS, useClass: MarathonInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: MarathonAppInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ProjectInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: MarathonFakeInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: MarathonFakeInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: MarathonProjectFakeInterceptor, multi: true },
     // marathonFakeProvider
   ],
   bootstrap: [AppComponent]
