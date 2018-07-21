@@ -72,8 +72,8 @@ import { MarathonProjectFakeInterceptor } from './marathon-project-fake.intercep
     { provide: HTTP_INTERCEPTORS, useClass: MarathonInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: MarathonAppInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ProjectInterceptor, multi: true },
-    // { provide: HTTP_INTERCEPTORS, useClass: MarathonFakeInterceptor, multi: true },
-    // { provide: HTTP_INTERCEPTORS, useClass: MarathonProjectFakeInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: MarathonFakeInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: MarathonProjectFakeInterceptor, multi: true },
     // marathonFakeProvider
   ],
   bootstrap: [AppComponent]

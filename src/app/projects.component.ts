@@ -6,7 +6,7 @@ import { ProjectService } from './project.service';
 import { RestItem } from './rest-item';
 
 @Component({
-  selector: 'projects',
+  selector: 'my-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
@@ -29,7 +29,7 @@ export class ProjectsComponent implements OnInit {
       .subscribe(
         projects => {
           this.projects = projects as Project[];
-          if(myCustomer) {
+          if (myCustomer) {
             this.customer = myCustomer;
             this.projects = this.projects.filter(app => app.customer === myCustomer)
           }
@@ -42,7 +42,7 @@ export class ProjectsComponent implements OnInit {
         }
       )
   }
-  
+
   addProject(): void {
     this.addingProject = true;
     this.selectedProject = null;
@@ -50,9 +50,7 @@ export class ProjectsComponent implements OnInit {
 
   close(savedProject: Project): void {
     this.addingProject = false;
-    if (savedProject) {
-      this.getProjects(this.customer);
-    }
+    this.getProjects(this.customer);
   }
 
   deleteProject(project: Project, event: any): void {
@@ -67,7 +65,7 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     // not needed, sind the Url is set in the Service, and is not part of the Project class:
-    //this.projectService.setUrl((new Project).url);
+    // this.projectService.setUrl((new Project).url);
     this.route.params.forEach((params: Params) => {
       if (params['customer'] !== undefined) {
         this.customer = params['customer'];
@@ -76,9 +74,8 @@ export class ProjectsComponent implements OnInit {
         this.getProjects();
       }
     });
-    
   }
-  
+
   onSelect(project: Project): void {
     this.selectedProject = project;
     this.addingProject = false;
