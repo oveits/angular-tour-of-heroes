@@ -90,9 +90,9 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
 
   close(savedMarathonApp: MarathonApp): void {
     this.addingMarathonApp = false;
-    if (savedMarathonApp) {
-      this.getMarathonApps$(this.project);
-    }
+    // if (savedMarathonApp) {
+    this.getMarathonApps$(this.project);
+    // }
   }
 
   deleteMarathonApp(marathonApp: MarathonApp, event: any): void {

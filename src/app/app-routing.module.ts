@@ -17,7 +17,7 @@ import { ProjectDetailComponent } from './project-detail.component';
 import { ProjectInputComponent } from './project-input.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/projects', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'detail/:id', component: HeroDetailComponent },
   // { path: 'services/:id', component: RestItemDetailComponent },
