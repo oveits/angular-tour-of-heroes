@@ -1,9 +1,6 @@
 <!-- <h2><span *ngIf="customer">Customer > {{customer}} > </span> Projects</h2> -->
 <h2>Services > <span *ngIf="customer"> {{customer}} > </span>Projects</h2>
 
-
-<div *ngIf="null == projects">Loading...</div>
-
 <!-- <button (click)="addProject()">Add New Project</button> -->
 <div *ngIf="addingProject">
   <my-project-input (close)="close($event)" addingProject=true></my-project-input>
@@ -20,6 +17,8 @@
     <button class="delete-button" (click)="deleteProject(project, $event)">Delete</button>
   </li>
 </ul>
+
+<div *ngIf="null == projects">Loading...</div>
 
 <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
