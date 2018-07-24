@@ -4,10 +4,10 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
 import { RestItem } from './rest-item';
-import { interval } from "rxjs";
-import { timer } from "rxjs";
-import { map, filter, catchError } from "rxjs/operators";
-import { Subscription, Observable } from "rxjs";
+import { interval } from 'rxjs';
+import { timer } from 'rxjs';
+import { map, filter, catchError } from 'rxjs/operators';
+import { Subscription, Observable } from 'rxjs';
 
 // for handleError:
 import { HttpErrorResponse  } from '@angular/common/http';
@@ -15,7 +15,7 @@ import { throwError as observableThrowError } from 'rxjs';
 
 
 @Component({
-  selector: 'marathon-apps',
+  selector: 'my-marathon-apps',
   templateUrl: './marathon-apps.component.html',
   styleUrls: ['./marathon-apps.component.css']
 })
@@ -30,20 +30,20 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
   project: String = null;
 
   // for dynamic refresh interval with exponential backoff:
-  msecMin: number = 1000;
-  msecMax: number = 30000;
+  msecMin = 1000;
+  msecMax = 30000;
   backoffFactor = 1.5;
-  private allSubscriptions : Subscription[] = new Array<Subscription>();
+  private allSubscriptions: Subscription[] = new Array<Subscription>();
 
   // for static refresh interval (commented out in favor of the dynamic interval with exponential backoff)
   // msec: number = 5000;
-  // private intervalRefreshSub : Subscription;
+  // private intervalRefreshSub: Subscription;
 
   counter$;
-  refreshDelayed$$ : Observable<Observable<MarathonApp[]>>;
+  refreshDelayed$$: Observable<Observable<MarathonApp[]>>;
 
 
-  constructor(private router: Router, 
+  constructor(private router: Router,
     private marathonAppService: MarathonAppService,
     private route: ActivatedRoute) {}
 
@@ -53,7 +53,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
   //     .subscribe(
   //       marathonApps => {
   //         this.marathonApps = marathonApps as MarathonApp[];
-  //         if(myProject) {
+  //         if (myProject) {
   //           this.project = myProject;
   //           this.marathonApps = this.marathonApps.filter(app => app.project === myProject)
   //         }
@@ -72,10 +72,10 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
       .getAll()
       .pipe(
         map(marathonApps => {
-          let filteredMarathonApps = marathonApps.filter(app => app.project === myProject) as MarathonApp[];
+          const filteredMarathonApps = marathonApps.filter(app => app.project === myProject) as MarathonApp[];
           console.log(filteredMarathonApps);
           this.marathonApps = filteredMarathonApps;
-          //return filteredMarathonApps;
+          // return filteredMarathonApps;
         }),
         catchError(error => this.error = error)
       )
@@ -104,7 +104,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
       }
 
       // not really needed:
-      //this.refresh(this.msecMin);
+      // this.refresh(this.msecMin);
     }, error => (this.error = error));
   }
 
@@ -117,13 +117,13 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
       } else {
         // this.getMarathonApps();
       }
-    });  
+    });
 
     // // refresh with static interval:
     //  this.intervalRefreshSub = interval(this.msec)
     //   .subscribe(res => {
     //     this.getMarathonApps(this.project);
-    //   }); 
+    //   });
 
     // this.counter$ = interval(5000)
     // .pipe(
@@ -149,7 +149,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
 
 
     // refresh with exponential backoff:
-    //this.refresh(this.msecMin);
+    // this.refresh(this.msecMin);
   }
 
   refreshDelayedOld(msec) {
@@ -159,19 +159,19 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
       return this.marathonAppService.getAll()
        .pipe(map((marathonApps) => {
          this.marathonApps = marathonApps.filter(app => app.project === this.project);
-         
+
          console.log(`refreshing msec = ${msec}`);
          let msecNew = msec
-         if( ! this.addingMarathonApp ) {
+         if ( ! this.addingMarathonApp ) {
            msecNew = msec * this.backoffFactor;
          }
-         
-         if(msecNew > this.msecMax) {
+
+         if (msecNew > this.msecMax) {
            msecNew = this.msecMax;
          }
 
          console.log(`msecNew = ${msecNew}`);
- 
+
          this.refreshDelayed$$ = this.refreshDelayedOld(msecNew);
          return this.refreshDelayedOld(msecNew);
 
@@ -186,19 +186,19 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
       console.log(x);
       return myFunction
        .pipe(map(() => {
-         
+
          console.log(`refreshing msec = ${msec}`);
          let msecNew = msec
-         if( ! this.addingMarathonApp ) {
+         if ( ! this.addingMarathonApp ) {
            msecNew = msec * this.backoffFactor;
          }
-         
-         if(msecNew > this.msecMax) {
+
+         if (msecNew > this.msecMax) {
            msecNew = this.msecMax;
          }
 
          console.log(`msecNew = ${msecNew}`);
- 
+
          this.refreshDelayed$$ = this.refreshDelayed$(msecNew, myFunction);
          return this.refreshDelayed$(msecNew, myFunction);
 
@@ -207,31 +207,30 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
      }));
   }
 
- 
   // // refresh with exponential backoff (tested successfully):
-  // refresh(msec) : void {
+  // refresh(msec): void {
   //   // cancel old refresh timers:
   //   this.allSubscriptions.map(sub => sub.unsubscribe());
   //   // garbage collection: only active subscriptions are kept:
   //   this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
 
-  //   this.allSubscriptions.push( 
+  //   this.allSubscriptions.push(
   //     timer(msec)
   //       .subscribe(res => {
   //         this.getMarathonApps(this.project);
   //         console.log(`refreshing msec = ${msec}`);
 
   //         let msecNew = msec
-  //         if( ! this.addingMarathonApp ) {
+  //         if ( ! this.addingMarathonApp ) {
   //           msecNew = msec * this.backoffFactor;
   //         }
-          
-  //         if(msecNew > this.msecMax) {
+
+  //         if (msecNew > this.msecMax) {
   //           msecNew = this.msecMax;
   //         }
 
   //         console.log(`msecNew = ${msecNew}`);
-  
+
   //         this.refresh(msecNew);
   //       })
   //   );
@@ -246,9 +245,9 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     // // for refresh with static interval:
-    // if(typeof(this.intervalRefreshSub) !== undefined) {
+    // if (typeof(this.intervalRefreshSub) !== undefined) {
     //   this.intervalRefreshSub.unsubscribe();
     // }
 
@@ -256,7 +255,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     // cancel old refresh timers:
     this.allSubscriptions.map(sub => sub.unsubscribe());
     // garbage collection: only active subscriptions are kept:
-    this.allSubscriptions = this.allSubscriptions.filter((sub) => {sub.closed === false});
+    this.allSubscriptions = this.allSubscriptions.filter((sub) => sub.closed === false);
   }
 
   onSelect(marathonApp: MarathonApp): void {
