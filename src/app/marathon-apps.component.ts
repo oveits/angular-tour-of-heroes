@@ -77,10 +77,10 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
           this.marathonApps = filteredMarathonApps;
           //return filteredMarathonApps;
         }),
-        catchError(this.handleError)
+        catchError(error => this.error = error)
       )
   }
-  
+
   addMarathonApp(): void {
     this.addingMarathonApp = true;
     this.selectedMarathonApp = null;
