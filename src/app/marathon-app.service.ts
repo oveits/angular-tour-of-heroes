@@ -11,20 +11,20 @@ export class MarathonAppService extends AbstractRestItemService<MarathonApp> imp
 
     protected url = 'http://94.130.187.229/service/marathon/v2/apps';
 
-    constructor(http: HttpClient){
+    constructor(http: HttpClient) {
       super(http);
-      console.log("MarathonAppService ngOninit called");
+      console.log('MarathonAppService ngOninit called');
       // this.setUrl(this.url);
     }
 
     // seems to be ignored:
-    ngOnInit(){
-      console.log("OnInit called on MarathonAppService");
+    ngOnInit() {
+      console.log('OnInit called on MarathonAppService');
       // super.setUrl(this.url);
     }
 
     // works also without explicit definition here:
-    setUrl(url: string){
+    setUrl(url: string) {
       super.setUrl(this.url);
     }
 
@@ -33,7 +33,7 @@ export class MarathonAppService extends AbstractRestItemService<MarathonApp> imp
       return super.getAll() as Observable<MarathonApp[]>;
     }
 
-    get(id){
+    get(id) {
       return super.get(id) as Observable<MarathonApp>;
     }
 
@@ -55,9 +55,9 @@ export class MarathonAppService extends AbstractRestItemService<MarathonApp> imp
     protected put(marathonApp: MarathonApp) {
       return super.post(marathonApp) as Observable<MarathonApp>;
     }
- 
+
     protected handleError(res: HttpErrorResponse | any) {
       return super.handleError(res);
     }
 
-}   
+}
