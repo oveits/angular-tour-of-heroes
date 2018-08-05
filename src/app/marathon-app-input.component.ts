@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
-import { FormsModule }   from '@angular/forms';
 
 @Component({
   selector: 'my-marathon-app-input',

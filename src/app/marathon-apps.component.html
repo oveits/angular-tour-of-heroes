@@ -1,11 +1,3 @@
-<h1>Exponential Backoff Timer Test:</h1>
-  <div>current intervalBackoffNumber: {{intervalBackoffNumber}}</div>
-  <div>Move the mouse to reset it</div>
-
-<ng-template #loading>
-    Loading...
-</ng-template>
-
 <div *ngIf="marathonApps != (intervalBackoffTimer$$ | async | async); else loading"></div>
 
 <h2>Services > <span *ngIf="project"><a routerLink="/projects" routerLinkActive="active">Projects</a> > {{project}} </span></h2>
@@ -27,7 +19,9 @@
   </li>
 </ul>
 
-<div *ngIf="null == marathonApps">Loading...</div>
+<ng-template #loading>
+  Loading...
+</ng-template>
 
 <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
