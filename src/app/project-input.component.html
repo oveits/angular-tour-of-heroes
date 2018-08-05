@@ -28,7 +28,8 @@
     required minlength="4" appForbiddenName="undefined"
     [(ngModel)]="project.name" #projectName="ngModel" 
     placeholder="New Project" 
-    pattern="[a-z][a-z0-9]{3,}([\/]?[a-z][a-z0-9]{3,})*" />
+    pattern="[a-z][a-z0-9]{3,}([\/]?[a-z][a-z0-9]{3,})*" 
+    (keyup)="toLowerCase()"/>
     <!-- (keyup.enter)="save()" removed, since it would allow to save projects that are invalid -->
     
   <button *ngIf="projectName && !projectName.invalid && !customerName || ( customerName && !customerName.invalid )" (click)="save()">Save</button> 

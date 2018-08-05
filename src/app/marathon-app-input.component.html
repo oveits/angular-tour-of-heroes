@@ -30,7 +30,7 @@
     [(ngModel)]="marathonApp.name" #marathonAppName="ngModel" 
     placeholder="New Service" 
     pattern="[a-z][a-z0-9]+" 
-    (keyup)="tolower()" />
+    (keyup)="toLowerCase()" />
     
     <!-- (keyup.enter)="save()" removed, since it would allow to save marathonApps that are invalid -->
     

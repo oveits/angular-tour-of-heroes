@@ -49,6 +49,10 @@ export class ProjectInputComponent implements OnInit {
     }); // TODO: Display error message
   }
 
+  toLowerCase(): void {
+    this.project.name = this.project.name.toLowerCase();
+  }
+
   goBack(savedProject: Project = null): void {
     this.close.emit(savedProject);
     if (this.navigated) {
