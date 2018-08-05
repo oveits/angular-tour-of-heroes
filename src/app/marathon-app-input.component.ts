@@ -48,6 +48,10 @@ export class MarathonAppInputComponent implements OnInit {
     }); // TODO: Display error message
   }
 
+  tolower(): void {
+    this.marathonApp.name = this.marathonApp.name.toLowerCase();
+  }
+
   goBack(savedMarathonApp: MarathonApp = null): void {
     this.close.emit(savedMarathonApp);
     if (this.navigated) {

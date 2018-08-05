@@ -29,7 +29,9 @@
     required minlength="4" appForbiddenName="undefined"
     [(ngModel)]="marathonApp.name" #marathonAppName="ngModel" 
     placeholder="New Service" 
-    pattern="[a-z][a-z0-9]+" />
+    pattern="[a-z][a-z0-9]+" 
+    (keyup)="tolower()" />
+    
     <!-- (keyup.enter)="save()" removed, since it would allow to save marathonApps that are invalid -->
     
   <button *ngIf="marathonAppName && !marathonAppName.invalid && !projectName || ( projectName && !projectName.invalid )" (click)="save()">Save</button> 
