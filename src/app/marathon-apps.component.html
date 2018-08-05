@@ -1,33 +1,21 @@
 <h1>Exponential Backoff Timer Test:</h1>
-  <div>current number: {{n}}</div>
+  <div>current intervalBackoffNumber: {{intervalBackoffNumber}}</div>
   <div>Move the mouse to reset it</div>
 
-  <ng-template #loading>
+<ng-template #loading>
     Loading...
 </ng-template>
 
-<!-- if both, posts and  (exponentialBackoffTimer$$ | async | async) are undefined, 'Loading...' is displayed: -->
 <div *ngIf="marathonApps != (intervalBackoffTimer$$ | async | async); else loading"></div>
-
-<!-- Time: {{ time$ | async | date:'mediumTime' }}
-
-TimeIncreased: {{ timeIncreased$ | async | date:'mediumTime' }} -->
-<!-- <h2>Services<span *ngIf="project"> of {{project}}</span></h2> -->
-<!-- <h5 hidden>BLA{{counter$ | async}}</h5> -->
-<!-- <h5>{{ (marathonApps$$ | async | async)[1].name}}</h5> -->
-<!-- <div hidden>{{intervalMarathonApps$$ | async | async}}</div> -->
-<!-- <div hidden>{{refreshDelayed$$ | async | async}}</div> -->
 
 <h2>Services > <span *ngIf="project"><a routerLink="/projects" routerLinkActive="active">Projects</a> > {{project}} </span></h2>
 
-<!-- <button class="marathonApps marathonApp-element" (click)="addMarathonApp()">Add New Service</button> -->
 <div *ngIf="addingMarathonApp">
   <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input>
 </div>
 
 <ul class="marathonApps">
     <li (click)="addMarathonApp()">+ Add New Service <span *ngIf="addingMarathonApp">
-        <!-- <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input> -->
     </span></li>
   <li *ngFor="let marathonApp of marathonApps" (click)="onSelect(marathonApp)" [class.selected]="marathonApp === selectedMarathonApp">
     <span class="marathonApp-element">
@@ -37,14 +25,9 @@ TimeIncreased: {{ timeIncreased$ | async | date:'mediumTime' }} -->
       <button class="delete-button" (click)="deleteMarathonApp(marathonApp, $event)">Delete</button>
     </span>
   </li>
-  <!-- <li (click)="addMarathonApp()">+ Add New Service <span *ngIf="addingMarathonApp">
-      <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input>
-  </span></li> -->
 </ul>
 
 <div *ngIf="null == marathonApps">Loading...</div>
-
-<!-- <button (click)="close()">Close</button> -->
 
 <div class="error" *ngIf="error" [innerHTML]="error">{{error}}</div>
 
