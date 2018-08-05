@@ -9,7 +9,8 @@
       required minlength="4" appForbiddenName="undefined"
       [(ngModel)]="marathonApp.project" #projectName="ngModel" 
       placeholder="Project"  
-      pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" />
+      pattern="[a-z][a-z0-9]+[\/]?[a-z][a-z0-9]+" 
+      (keyup)="marathonApp.project = marathonApp.project.toLowerCase()" />
 
     <div *ngIf="projectName && projectName.invalid && (projectName.dirty || projectName.touched)"
       class="alert alert-danger">
@@ -30,7 +31,7 @@
     [(ngModel)]="marathonApp.name" #marathonAppName="ngModel" 
     placeholder="New Service" 
     pattern="[a-z][a-z0-9]+" 
-    (keyup)="toLowerCase()" />
+    (keyup)="marathonApp.name = marathonApp.name.toLowerCase()" />
     
     <!-- (keyup.enter)="save()" removed, since it would allow to save marathonApps that are invalid -->
     
