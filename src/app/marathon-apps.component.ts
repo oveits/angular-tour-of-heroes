@@ -4,14 +4,18 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
 import { RestItem } from './rest-item';
-import { interval } from 'rxjs';
+import { interval, fromEvent } from 'rxjs';
 import { timer } from 'rxjs';
-import { map, filter, catchError, delay } from 'rxjs/operators';
+import { map, filter, catchError, delay, sampleTime, startWith, switchMapTo } from 'rxjs/operators';
 import { Subscription, Observable } from 'rxjs';
 
 // for handleError:
 import { HttpErrorResponse  } from '@angular/common/http';
 import { throwError as observableThrowError } from 'rxjs';
+
+import { intervalBackoff } from 'backoff-rxjs';
+export const INITIAL_INTERVAL_MS = 5000; // 5 sec, choose larger than mean response time of REST service called
+export const MAX_INTERVAL_MS = 60000; // 1 min
 
 
 @Component({
@@ -21,16 +25,19 @@ import { throwError as observableThrowError } from 'rxjs';
 })
 export class MarathonAppsComponent implements OnInit, OnDestroy {
   marathonApps: MarathonApp[];
+  n: number;
+  intervalBackoffTimer$$: Observable<Observable<void | {}>>;
+
   intervalMarathonApps$$: Observable<Observable<MarathonApp[]>>;
   selectedMarathonApp: MarathonApp;
   addingMarathonApp = false;
   error: any;
   showNgFor = false;
   exposedUrl: String = '/marathonapps';
-  project: String = null;
+  project: String = '';
 
   // for dynamic refresh interval with exponential backoff:
-  msecMin = 1000;
+  msecMin = 2000;
   msecMax = 30000;
   backoffFactor = 1.5;
   private allSubscriptions: Subscription[] = new Array<Subscription>();
@@ -59,25 +66,55 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     private marathonAppService: MarathonAppService,
     private route: ActivatedRoute) {}
 
-  // getMarathonApps(myProject: String = null): void {
-  //   this.marathonAppService
-  //     .getAll()
-  //     .subscribe(
-  //       marathonApps => {
-  //         this.marathonApps = marathonApps as MarathonApp[];
-  //         if (myProject) {
-  //           this.project = myProject;
-  //           this.marathonApps = this.marathonApps.filter(app => app.project === myProject)
-  //         }
-  //         console.log(this.marathonApps);
-  //       }
-  //       ,
-  //       error => {
-  //         console.log(error);
-  //         this.error = error;
-  //       }
-  //     )
-  // }
+  ngOnInit() {
+
+    // calculate projects:
+    this.route.params.forEach((params: Params) => {
+      if (params['project'] !== undefined) {
+        this.project = params['project'];
+        // this.getMarathonApps(this.project);
+      } else {
+        this.project = '';
+        // this.getMarathonApps();
+      }
+    });
+
+    this.intervalBackoffTimer$$ =
+      fromEvent(document, 'mousemove').pipe(
+
+        // There could be many mousemoves, we'd want to sample only
+        // with certain frequency
+        sampleTime(INITIAL_INTERVAL_MS),
+
+        // Start immediately
+        startWith(null),
+
+        // Resetting exponential interval operator
+        switchMapTo(intervalBackoff({
+          backoffDelay: (iteration, initialInterval) => Math.pow(1.5, iteration) * initialInterval,
+          initialInterval: INITIAL_INTERVAL_MS,
+          maxInterval: MAX_INTERVAL_MS
+        })),
+
+        // mapping the code that returns an Observable of the void getAndAssignPosts$() function
+        map( n => {
+          console.log('iteration since reset: ' + n);
+          this.n = n;
+          return this.getAndAssignMarathonApps$(this.project);
+        }),
+      );
+  }
+
+  getAndAssignMarathonApps$(myProject: String = null): Observable<void | {}> {
+    return this.marathonAppService.getAll().pipe (
+      map(marathonApps => {
+        const filteredMarathonApps = marathonApps.filter(app => app.project === myProject) as MarathonApp[];
+        console.log(filteredMarathonApps);
+        this.marathonApps = filteredMarathonApps;
+      }),
+      catchError(error => this.error = error)
+    );
+  }
 
   getMarathonApps$(myProject: String = null): Observable<MarathonApp[] | {}> {
     return this.marathonAppService
@@ -120,7 +157,7 @@ export class MarathonAppsComponent implements OnInit, OnDestroy {
     }, error => (this.error = error));
   }
 
-  ngOnInit(): void {
+  ngOnInitOld(): void {
 
     this.route.params.forEach((params: Params) => {
       if (params['project'] !== undefined) {

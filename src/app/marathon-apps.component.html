@@ -1,11 +1,22 @@
-Time: {{ time$ | async | date:'mediumTime' }}
+<h1>Exponential Backoff Timer Test:</h1>
+  <div>current number: {{n}}</div>
+  <div>Move the mouse to reset it</div>
 
-TimeIncreased: {{ timeIncreased$ | async | date:'mediumTime' }}
+  <ng-template #loading>
+    Loading...
+</ng-template>
+
+<!-- if both, posts and  (exponentialBackoffTimer$$ | async | async) are undefined, 'Loading...' is displayed: -->
+<div *ngIf="marathonApps != (intervalBackoffTimer$$ | async | async); else loading"></div>
+
+<!-- Time: {{ time$ | async | date:'mediumTime' }}
+
+TimeIncreased: {{ timeIncreased$ | async | date:'mediumTime' }} -->
 <!-- <h2>Services<span *ngIf="project"> of {{project}}</span></h2> -->
 <!-- <h5 hidden>BLA{{counter$ | async}}</h5> -->
 <!-- <h5>{{ (marathonApps$$ | async | async)[1].name}}</h5> -->
 <!-- <div hidden>{{intervalMarathonApps$$ | async | async}}</div> -->
-<div hidden>{{refreshDelayed$$ | async | async}}</div>
+<!-- <div hidden>{{refreshDelayed$$ | async | async}}</div> -->
 
 <h2>Services > <span *ngIf="project"><a routerLink="/projects" routerLinkActive="active">Projects</a> > {{project}} </span></h2>
 
