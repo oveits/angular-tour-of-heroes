@@ -14,5 +14,4 @@ export class MarathonApp extends RestItem {
     // tasksHealthy: String;
     // tasksUnhealthy: String;
     // tasksRunning: String;
-    
   }
