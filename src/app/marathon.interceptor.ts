@@ -13,10 +13,11 @@ import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MarathonInterceptor implements HttpInterceptor {
-    private authToken : string = "eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MzI0NTU0MjksImlhdCI6MTUzMjAyMzQyOSwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.WstsTi0DhOISRStnB8jiY8S1nal6mGHWCyA50C5VFTw";
+    // tslint:disable-next-line:max-line-length
+    private authToken = 'eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoib2xpdmVyLnZlaXRzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MzI0NTU0MjksImlhdCI6MTUzMjAyMzQyOSwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNjI1MzMxNzc0ODE4NzQ5MDc3NCIsInVpZCI6Im9saXZlci52ZWl0c0BnbWFpbC5jb20ifQ.WstsTi0DhOISRStnB8jiY8S1nal6mGHWCyA50C5VFTw';
     private urlPattern = '.*marathon.*'
     // TODO: url is now defined in './marathon-app.service.ts' while the authToken is defined here
-    //       Please Improve the configuration handling! 
+    //       Please Improve the configuration handling!
 
     intercept(
         request: HttpRequest<any>,
@@ -25,7 +26,7 @@ export class MarathonInterceptor implements HttpInterceptor {
 
 
         // interceptor for marathon API only; i.e. NOOP for other URLs:
-        if(!request.url.match(this.urlPattern)){
+        if (!request.url.match(this.urlPattern)) {
           return next.handle(request);
         }
 

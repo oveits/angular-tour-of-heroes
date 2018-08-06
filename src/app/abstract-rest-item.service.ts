@@ -31,7 +31,11 @@ export abstract class AbstractRestItemService<T> implements OnInit {
     // Read REST Item
     get(id: string): Observable<RestItem> {
       return this.getAll().pipe(
-        map(restItems => restItems.find(restItem => restItem.id === id))
+        map(restItems => {
+          const found = restItems.find(restItem => restItem.id === id);
+          // TODO: return error reflecting 404, if found is null
+          return found;
+          })
       );
     }
 

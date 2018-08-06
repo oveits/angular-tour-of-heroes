@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MarathonApp } from './marathon-app';
 import { MarathonAppService } from './marathon-app.service';
-import { interval, fromEvent } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { map, catchError, sampleTime, startWith, switchMapTo } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -38,6 +38,7 @@ export class MarathonAppsComponent implements OnInit {
     this.route.params.forEach((params: Params) => {
       if (params['project'] !== undefined) {
         this.project = params['project'];
+        this.exposedUrl = '/' + this.project + '/' + this.exposedUrl;
         // this.getMarathonApps(this.project);
       } else {
         this.project = '';
@@ -111,7 +112,7 @@ export class MarathonAppsComponent implements OnInit {
   onSelect(marathonApp: MarathonApp): void {
     this.selectedMarathonApp = marathonApp;
     this.addingMarathonApp = false;
-    this.router.navigate([this.exposedUrl, this.selectedMarathonApp.id]);
+    this.router.navigate(['projects', this.project, 'marathonapps', this.selectedMarathonApp.name]);
   }
 
   gotoDetail(): void {

@@ -13,6 +13,7 @@ export class MarathonAppDetailComponent implements OnInit {
   @Output() close = new EventEmitter();
   error: any;
   navigated = false; // true if navigated here
+  project: String = null;
 
   constructor(
     private marathonAppService: MarathonAppService,
@@ -20,13 +21,30 @@ export class MarathonAppDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     this.route.params.forEach((params: Params) => {
+      let fullId = null;
+      if (params['project'] !== undefined) {
+        this.project = params['project'];
+        fullId = params['project'];
+        // this.getMarathonApps(this.project);
+      } else {
+        this.project = '';
+        // this.getMarathonApps();
+      }
+
       if (params['id'] !== undefined) {
         const id = params['id'];
+        if ( fullId ) {
+          fullId = '/' + fullId + '/' + id;
+        } else {
+          fullId = id;
+        }
         this.navigated = true;
-        this.marathonAppService.get(id).subscribe(marathonApp => {
-          this.marathonApp = marathonApp;
-        });
+        this.marathonAppService.get(fullId).subscribe(
+          marathonApp => {
+            this.marathonApp = marathonApp;
+          });
       } else {
         this.navigated = false;
         this.marathonApp = new MarathonApp();

@@ -26,6 +26,7 @@ const routes: Routes = [
   { path: 'marathonapps/:id', component: MarathonAppDetailComponent },
   { path: 'marathonappsinput', component: MarathonAppInputComponent },
   { path: 'projects/:project/marathonapps', component: MarathonAppsComponent },
+  { path: 'projects/:project/marathonapps/:id', component: MarathonAppDetailComponent },
   { path: 'projects', component: ProjectsComponent },
   { path: 'projects/:id', component: ProjectDetailComponent },
   // { path: 'services', component: RestItemsComponent }

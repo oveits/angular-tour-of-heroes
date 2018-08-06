@@ -1,6 +1,6 @@
 <div *ngIf="marathonApps != (intervalBackoffTimer$$ | async | async); else loading"></div>
 
-<h2><span *ngIf="project"><a routerLink="/projects" routerLinkActive="active">Projects</a> > {{project}} </span></h2>
+<h2><span *ngIf="project"><a routerLink="/projects" routerLinkActive="active">All Projects</a> > "{{project}}" > Services </span></h2>
 
 <div *ngIf="addingMarathonApp">
   <my-marathon-app-input (close)="close($event)" addingMarathonApp=true></my-marathon-app-input>

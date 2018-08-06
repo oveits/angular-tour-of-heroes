@@ -1,6 +1,7 @@
 <div *ngIf="marathonApp">
 
-  <h1>Service: <a href="http://195.201.17.1{{marathonApp.id}}">{{marathonApp.name}}</a></h1>
+  <h2><span *ngIf="project"><a routerLink="/projects" routerLinkActive="active">All Projects</a> > "{{project}}" > <a routerLink="/projects/{{project}}/marathonapps/" routerLinkActive="active">Services</a> > </span>"<a href="http://195.201.17.1{{marathonApp.id}}">{{marathonApp.name}}</a>"</h2>
+
 
   <table style="width:100%">
     <tr>
